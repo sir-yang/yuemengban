@@ -1,0 +1,47 @@
+<view>
+    <view class='reservation_content'>
+        <view class='service_box'>
+            <view class='service_title'>服务技能</view>
+            <view class='service_list'>
+                <view class='service_item flex_between flex_items {{serverId == 0 ? "active" : ""}}' catchtap='reservationEvent' data-types='service' data-index='0'>
+                    <view class='f32 cfea'>王者荣耀</view>
+                    <view class='f32 cfea'>30/小时</view>
+                </view>
+                <view class='service_item flex_between flex_items {{serverId == 1 ? "active" : ""}}' catchtap='reservationEvent' data-types='service' data-index='1'>
+                    <view class='f32 cfea'>王者荣耀</view>
+                    <view class='f32 cfea'>30/小时</view>
+                </view>
+            </view>
+        </view>
+
+        <!-- 陪玩时间 -->
+        <view class='accompany_time'>
+            <view class='service_title'>陪玩时间</view>
+            <view class='flex_between flex_items'>
+                <view class='time_item {{timeId == 0 ? "active" : ""}}' catchtap='reservationEvent' data-types='time' data-index='0'>1小时</view>
+                <view class='time_item {{timeId == 1 ? "active" : ""}}' catchtap='reservationEvent' data-types='time' data-index='1'>2小时</view>
+                <view class='time_item {{timeId == 2 ? "active" : ""}}' catchtap='reservationEvent' data-types='time' data-index='2'>5小时</view>
+            </view>
+            <view class='total_money'>支付总额：300元</view>
+            <view class='call_partner_btn' catchtap='reservationEvent' data-types='sure'>呼叫萌伴</view>
+        </view>
+
+        <!-- 萌伴信息 -->
+        <view class='partner_info'>
+            <view class='flex_start flex_items'>
+                <view class='dot'></view>
+                <view class='label' style='letter-spacing: 13rpx;'>萌伴号</view>
+                <view>MW10000001</view>
+            </view>
+            <view class='flex_start flex_items'>
+                <view class='dot'></view>
+                <view class='label'>萌萌微信</view>
+                <image class='wechat_img' catchtap='reservationEvent' data-types='img' src='/images/weixin.png'></image>
+            </view>
+            <view class='flex_start'>
+                <view class='dot flex_shrink' style='margin-top: 19rpx;'></view>
+                <view>亲爱的萌玩，下单后请添加萌萌微信并备注萌伴号</view>
+            </view>
+        </view>
+    </view>
+</view>

@@ -1,0 +1,39 @@
+
+<view>
+    <view class='partner_info'>
+        <view class='partner_pic_box'>
+            <image class='partner_pic' src='/images/partner_img.png'></image>
+            <view class='partner_name_status flex_between flex_items'>
+                <view class='pos'>昵称<text class='ml10'>萌呢</text></view>
+                <view class='pos'>忙碌</view>
+            </view>
+        </view>
+
+        <view class='partner_introduction flex_start flex_items'>
+            <view class='label'>技能介绍</view>
+            <view class='audio_box flex_between flex_items' catchtap='homeEvent' data-types='audio'>
+                <view class='audio_txt'>00:21</view>
+                <image class='audio_icon' src='/images/home_audio.png'></image>
+            </view>
+        </view>
+    </view>
+
+    <view class='switch_btn_box flex_around flex_items'>
+        <view class='next_prev_btn' catchtap='homeEvent' data-types='prev'>
+            <image src='/images/home-btn-icon.png'></image>
+            <view>上一个</view>
+        </view>
+        <view class='center_btn_box' catchtap='homeEvent' data-types='sure'>
+            <image class='yue_icon' src='/images/home-bottonyue.png'></image>
+            <view>约</view>
+        </view>
+        <view class='next_prev_btn' catchtap='homeEvent' data-types='next'>
+            <image src='/images/home-btn-icon.png'></image>
+            <view>下一个</view>
+        </view>
+    </view>
+
+    <view>
+        <image catchtap='homeEvent' data-types='mine' class='personal_btn' src='/images/home-bottonmine.png'></image>
+    </view>
+</view>

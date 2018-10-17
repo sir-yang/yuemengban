@@ -1,0 +1,92 @@
+
+.reservation_content {
+    padding: 0 60rpx;
+}
+.service_title {
+    margin-top: 40rpx;
+    margin-bottom: 26rpx;
+    text-align: center;
+    font-size: 38rpx;
+    color: #fea2c5;
+}
+.service_item {
+    width: 630rpx;
+    height: 96rpx;
+    margin: 40rpx auto 0;
+    line-height: 96rpx;
+    border-radius: 8rpx;
+    padding: 0 56rpx;
+    background: #fff;
+    box-shadow: 0 8rpx 40rpx -16rpx #FEA2C5;
+    box-sizing: border-box;
+}
+.service_item.active {
+    background: #febed9;
+}
+.service_item.active view {
+    color: #fff;
+}
+
+/* 陪玩时间 */
+.accompany_time {
+    padding-top: 10rpx;
+}
+
+.time_item {
+    width: 200rpx;
+    height: 88rpx;
+    line-height: 88rpx;
+    border-radius: 8rpx;
+    background: #fff;
+    color: #FEA2C5;
+    font-size: 32rpx;
+    text-align: center;
+    box-shadow: 0 8rpx 40rpx -16rpx #FEA2C5;
+}
+.time_item.active {
+    background: #FEA2C5;
+    color: #fff;
+}
+.total_money {
+    margin-top: 40rpx;
+    font-size: 32rpx;
+    color: #FEA2C5;
+    text-align: right;
+}
+.call_partner_btn {
+    width: 630rpx;
+    height: 88rpx;
+    margin-top: 30rpx;
+    line-height: 88rpx;
+    border-radius: 44rpx;
+    background: #FEA2C5;
+    box-shadow: 0 2rpx 40rpx -16px #FEA2C5;
+    font-size: 32rpx;
+    color: #fff;
+    text-align: center;
+}
+/* 萌伴信息 */
+.partner_info {
+    margin-top: 20rpx;
+    margin-left: 40rpx;
+    font-size: 32rpx;
+    line-height: 44rpx;
+    color: #FEA2C5;
+}
+.partner_info .dot {
+    width: 6rpx;
+    height: 6rpx;
+    margin-right: 5rpx;
+    background: #FEA2C5;
+    border-radius: 100%;
+}
+.partner_info .label {
+    width: 136rpx;
+    margin-right: 32rpx;
+}
+.wechat_img {
+    display: block;
+    width: 232rpx;
+    height: 232rpx;
+    margin: 15rpx 0;
+}

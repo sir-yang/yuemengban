@@ -1,0 +1,42 @@
+<view>
+    <view class='banner_box'>
+        <view class='notice'>通知：通知内容，走马灯的方式</view>
+        <view class='flex_column flex_items'>
+            <image class='head_img' src='/images/head.png'></image>
+            <view class='f32 cf'>邀请码 100005</view>
+        </view>
+    </view>
+
+    <view class='features_list'>
+        <view class='features_item flex_between flex_items'>
+            <view class='left_box flex_start flex_items'>
+                <view>订单状态</view>
+                <view class='line'></view>
+            </view>
+            <view class='right_box flex_start flex_items'>
+                <view class='mr20'>可接单</view>
+                <switch color='#FEA2C5'></switch>
+            </view>
+        </view>
+        <view class='features_item flex_start flex_items'>
+            <view class='left_box flex_start flex_items'>
+                <view>我的钱包</view>
+                <view class='line'></view>
+            </view>
+            <view>
+                <view class='right_text'>可提现金额：1000元</view>
+                <view class='right_text'>奖励金：1000金</view>
+            </view>
+        </view>
+        <view class='features_item flex_start flex_items'>
+            <view class='left_box flex_start flex_items'>
+                <view>订单中心</view>
+                <view class='line'></view>
+            </view>
+            <view class='right_text'>共下单：10单</view>
+        </view>
+    </view>
+
+
+
+</view>

@@ -1,0 +1,17 @@
+{
+    "pages": [
+        "pages/logs/logs",
+        "pages/index/index",
+        "pages/mine/mine",
+        "pages/reservation/reservation"
+    ],
+    "requiredBackgroundModes": [
+        "audio"
+    ],
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#FEA2C5",
+        "navigationBarTitleText": "萌世界",
+        "navigationBarTextStyle": "white"
+    }
+}

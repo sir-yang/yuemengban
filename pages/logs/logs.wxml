@@ -1,0 +1,6 @@
+
+<view>
+<map id="map" longitude="104.036699" latitude="30.700839" scale="13" controls="{{controls}}" circles="{{circles}}" bindcontroltap="controltap" markers="{{markers}}" bindupdated="mapupdated" bindmarkertap="markertap" bindregionchange="regionchange" show-location style="width: 100%; height: 600px;"></map>
+</view>
+
+
