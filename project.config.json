@@ -4,7 +4,7 @@
 		"ignore": []
 	},
 	"setting": {
-		"urlCheck": true,
+		"urlCheck": false,
 		"es6": true,
 		"postcss": true,
 		"minified": true,
@@ -41,7 +41,7 @@
 				{
 					"id": 0,
 					"name": "aa",
-					"pathName": "pages/mine/mine",
+					"pathName": "pages/apply/apply",
 					"query": ""
 				},
 				{

@@ -1,39 +1,42 @@
-//app.js
+import 'utils/wx-pro.js';
+
+let util = require('utils/util.js');
+let common = require('utils/common.js');
+
 App({
-  onLaunch: function () {
-    // 展示本地存储能力
-    var logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
+    checkToken: false,
+    onLaunch(_options) {
+        console.log(_options);
+        this.checkToken = true;
+        wx.setStorageSync("serverurl", "http://192.168.0.104/");
+        wx.setStorageSync("authALter", 0);
+    },
 
-    // 登录
-    wx.login({
-      success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-      }
-    })
-    // 获取用户信息
-    wx.getSetting({
-      success: res => {
-        if (res.authSetting['scope.userInfo']) {
-          // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-          wx.getUserInfo({
-            success: res => {
-              // 可以将 res 发送给后台解码出 unionId
-              this.globalData.userInfo = res.userInfo
-
-              // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-              // 所以此处加入 callback 以防止这种情况
-              if (this.userInfoReadyCallback) {
-                this.userInfoReadyCallback(res)
-              }
+    onShow(options) {
+        let that = this;
+        wx.pro.checkSession().then(() => {
+            let token = common.getAccessToken();
+            if (!token) {
+                console.log('no token');
+            } else if (that.checkToken) {
+                that.checkToken = false;
             }
-          })
-        }
-      }
-    })
-  },
-  globalData: {
-    userInfo: null
-  }
-})
+            that.refresh(options);
+        }).catch((_e) => {
+            that.refresh(options);
+        });
+    },
+
+    // 刷新token
+    refresh(_options) {
+        let that = this;
+        common.getToken().then((_res) => {
+            getApp().globalData.tokenUpdated();
+        });
+    },
+
+    globalData: {
+        commonFun: common,
+        utilFun: util
+    }
+});

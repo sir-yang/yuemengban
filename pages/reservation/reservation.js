@@ -81,6 +81,9 @@ Page({
             });
         } else if (dataset.types == 'sure') {//呼叫萌伴
             console.log('呼叫萌伴');
+            wx.redirectTo({
+                url: '/pages/order/order'
+            });
         }
     }
 })

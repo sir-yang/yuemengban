@@ -1,9 +1,11 @@
 {
     "pages": [
-        "pages/logs/logs",
         "pages/index/index",
         "pages/mine/mine",
-        "pages/reservation/reservation"
+        "pages/reservation/reservation",
+        "pages/apply/apply",
+        "pages/order/order",
+        "pages/wallet/wallet"
     ],
     "requiredBackgroundModes": [
         "audio"

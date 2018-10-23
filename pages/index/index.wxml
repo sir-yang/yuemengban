@@ -12,7 +12,7 @@
         <view class='partner_introduction flex_start flex_items'>
             <view class='label'>技能介绍</view>
             <view class='audio_box flex_between flex_items' catchtap='homeEvent' data-types='audio'>
-                <view class='audio_txt'>00:21</view>
+                <view class='audio_txt'>{{audioTime}}</view>
                 <image class='audio_icon' src='/images/home_audio.png'></image>
             </view>
         </view>
@@ -37,3 +37,19 @@
         <image catchtap='homeEvent' data-types='mine' class='personal_btn' src='/images/home-bottonmine.png'></image>
     </view>
 </view>
+
+
+<block wx:if="{{authALter}}">
+    <view class='tankuang'></view>
+    <view class='alter2' style='padding-bottom:0'>
+        <view class='p30 box_b'>
+            <view class='f36 pb30'>微信授权</view>
+            <view class='ptb30 f30 bbe9s'>申请获取以下权限</view>
+            <view class='txt_center ptb30 f30 c9'>获得你的公开信息（昵称、头像等），是否允许？</view>
+            <view class='flex_end f30 txt_center pt30 flex_items'>
+                <view bindtap='closeAuth' class='auth c9 flex_shrink'>取消</view>
+                <button hover-class='none' class='cff5 auth f30' open-type="getUserInfo" bindgetuserinfo="userInfoHandler">确认</button>
+            </view>
+        </view>
+    </view>
+</block>
