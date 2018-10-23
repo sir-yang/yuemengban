@@ -1,0 +1,48 @@
+
+.wallet_box {
+    width: 670rpx;
+    padding: 40rpx 30rpx;
+    margin: 0 auto 40rpx;
+    background: #fff;
+    box-shadow: 0 8rpx 40rpx -16rpx #FEA2C5;
+    border-radius: 16rpx;
+    box-sizing: border-box;
+}
+
+.tit {
+    font-size: 32rpx;
+    color: #FEA2C5;
+    text-align: left;
+}
+
+.wallet_box:nth-child(2) .tit {
+    letter-spacing: 32rpx;
+}
+
+.wattle_img {
+    display: block;
+    width: 150rpx;
+    height: 150rpx;
+    margin: 50rpx auto 15rpx;
+}
+
+.wattle_btn {
+    width: 304rpx;
+    height: 88rpx;
+    margin: 30rpx auto 0;
+    border-radius: 44rpx;
+    box-shadow: 0 2rpx 40rpx -16rpx #FEA2C5;
+    background: #FEA2C5;
+    color: #fff;
+    font-size: 32rpx;
+    text-align: center;
+    line-height: 88rpx;
+}
+
+.tip {
+    margin-top: 30rpx;
+    padding: 0 20rpx;
+    font-size: 32rpx;
+    color: #FEA2C5;
+    text-align: center;
+}

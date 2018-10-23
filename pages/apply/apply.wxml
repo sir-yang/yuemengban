@@ -1,0 +1,35 @@
+
+<view>
+    <view class='audio_box'>
+        <view class='crl-dot' animation='{{dotAnData}}'></view>
+        <image class='audio_img' src='/images/audio_img.png'></image>
+        <view wx:if="{{voice && playing}}" class='play flex_start flex_items' catchtap='applyEvent' data-types='pause'>
+            <view class='line'></view>
+            <view class='line'></view>
+        </view>
+        <view wx:if="{{voice && !playing}}" class='pause' catchtap='applyEvent' data-types='play'></view>
+    </view>
+
+    <view class='apply_btn_box flex_center flex_items'>
+        <view wx:if="{{voice}}" class='default_btn' catchtap='applyEvent' data-types='record'>重新录音</view>
+        <view wx:else class='default_btn' catchtap='applyEvent' data-types='record'>{{status == 'start' ? '开始录音' : '停止录音'}}</view>
+        <view class='default_btn apply_btn' catchtap='applyEvent' data-types='apply'>成为萌伴</view>
+    </view>
+
+    <view class='apply_bottom flex_start'>
+        <view class='bottom_left'>
+            <view class='tit'>Step</view>
+            <view>1 请先录音进行技能介绍</view>
+            <view>2 请准备三张自拍照</view>
+            <view>3 请扫码客服微信进行人工审核</view>
+            <view>4 人工审核通过后即可开始接单</view>
+        </view>
+        <view class='bottom_right'>
+            <view class='code_bg'>
+                <image src='/images/kf_code.png' catchtap='applyEvent' data-types='image'></image>
+            </view>
+            <view class='f24 cfea txt_center'>·长按识别二维码·</view>
+        </view>
+    </view>
+
+</view>

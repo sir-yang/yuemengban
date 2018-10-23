@@ -1,0 +1,21 @@
+
+<view class='mt40'>
+    <view class='wallet_box'>
+        <view class='tit'>可提现金额</view>
+        <view class='txt_center'>
+            <image class='wattle_img' src='/images/wallet_1.png'></image>
+            <view class='f32 cfea'>1000元</view>
+            <view class='wattle_btn' catchtap='wattleEvent' data-types='wattle'>申请提现</view>
+            <view class='tip'>注：提现金额将直接付款到微信零钱</view>
+        </view>
+    </view>
+
+    <view class='wallet_box'>
+        <view class='tit'>奖励金</view>
+        <view class='txt_center'>
+            <image class='wattle_img' src='/images/wallet_2.png'></image>
+            <view class='f32 cfea'>1000金</view>
+            <view class='tip'>注：关于奖励金的获取和使用，可咨询客服或者关注公众号“萌萌陪玩”</view>
+        </view>
+    </view>
+</view>

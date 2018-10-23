@@ -1,0 +1,101 @@
+
+.order_item {
+    width: 670rpx;
+    margin: 0 auto;
+    padding-top: 40rpx;
+    padding-bottom: 20rpx; 
+}
+.order_cont_box {
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 8rpx 40rpx -16rpx #FEA2C5;
+    border-radius: 16rpx;
+}
+.cont_top {
+    position: relative;
+    width: 100%;
+    height: 104rpx;
+    background: #FEA2C5;
+    border-radius: 16rpx 16rpx 0 0;
+    font-size: 32rpx;
+    color: #fff;
+}
+
+.new_order {
+    height: 128rpx;
+}
+
+.cont_row {
+    padding: 0 30rpx 10rpx;
+}
+.undone_order {
+    padding-top: 26rpx;
+}
+.undone_order view {
+    position: relative;
+    z-index: 2;
+}
+.undone_order view:nth-child(2) {
+    margin: 0 76rpx;
+}
+.undone_order view::after {
+    display: block;
+    content: '';
+    position: absolute;
+    bottom: -46rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30rpx;
+    height: 30rpx;
+    border-radius: 100%;
+    border: 2rpx solid #fff;
+    background: #FEA2C5;
+}
+.undone_order view.active::after {
+    background: #fff;
+}
+
+.undone_order::after {
+    display: block;
+    content: '';
+    position: absolute;
+    bottom: 30rpx;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 310rpx;
+    height: 2rpx;
+    background: #fff;
+}
+.undone_order.user::after {
+    width: 340rpx;
+}
+
+
+.cont_row view {
+    font-size: 28rpx;
+    color: #FEA2C5;
+    line-height: 80rpx;
+    border-bottom: 1rpx solid #FEA2C5;
+}
+.cont_row view:last-child {
+    border-bottom: none;
+}
+
+.dafult_btn {
+    height: 88rpx;
+    margin: 40rpx auto 0;
+    border-radius: 44rpx;
+    box-shadow: 0 2rpx 40rpx -16rpx #FEA2C5;
+    background: #FEA2C5;
+    font-size: 32rpx;
+    color: #fff;
+    text-align: center;
+    line-height: 88rpx;
+}
+.order_btn {
+    width: 200rpx;
+}
+
+.time_btn {
+    width: 280rpx;
+}

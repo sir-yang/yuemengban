@@ -1,0 +1,107 @@
+.audio_box {
+    position: relative;
+    width: 400rpx;
+    height: 400rpx;
+    margin: 80rpx auto 60rpx;
+    border-radius: 100%;
+    border: 4rpx solid rgba(255, 158, 196, 0.2);
+}
+
+.crl-dot {
+    position: absolute;
+    top: 0;
+    left: 203rpx;
+    width: 4rpx;
+    height: 4rpx;
+    background: #000;
+}
+
+.audio_img {
+    display: block;
+    width: 324rpx;
+    height: 324rpx;
+    margin: 38rpx auto;
+}
+
+.play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.line {
+    width: 16rpx;
+    height: 74rpx;
+    background: #fff;
+    border-radius: 8rpx;
+    margin: 0 16rpx;
+}
+
+.pause {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    border-width: 37rpx;
+    border-style: solid;
+    border-color: transparent transparent transparent #fff;
+}
+
+.apply_btn_box {
+    margin-top: 60rpx;
+    margin-bottom: 140rpx;
+}
+
+.default_btn {
+    width: 240rpx;
+    height: 88rpx;
+    box-shadow: 0 8rpx 40rpx -16rpx #fea2c5;
+    border-radius: 44rpx;
+    text-align: center;
+    line-height: 88rpx;
+    font-size: 32rpx;
+    color: #fea2c5;
+    background: #fff;
+}
+
+.apply_btn {
+    background: #fea2c5;
+    color: #fff;
+    margin-left: 112rpx;
+}
+
+.apply_bottom {
+    padding: 0 20rpx 0 50rpx;
+}
+
+.bottom_left .tit {
+    margin-top: 20rpx;
+    margin-bottom: 48rpx;
+    font-size: 48rpx;
+    color: #fea2c5;
+}
+
+.bottom_left {
+    font-size: 28rpx;
+    color: #fea2c5;
+    line-height: 40rpx;
+}
+
+.code_bg {
+    width: 282rpx;
+    height: 240rpx;
+    padding-top: 4rpx;
+    background: rgba(255, 193, 221, 0.3);
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+.code_bg image {
+    display: block;
+    width: 232rpx;
+    height: 232rpx;
+    margin: auto;
+}

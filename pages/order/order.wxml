@@ -1,0 +1,59 @@
+
+<view>
+    <!-- 萌伴 -->
+    <view class='order_item'>
+        <view class='order_cont_box'>
+            <view class='cont_top new_order'>
+                <view class='flex_center flex_items undone_order'>
+                    <view>接单</view>
+                    <view class='active'>进行中</view>
+                    <view>已完成</view>
+                </view>
+            </view>
+            <view class='cont_row'>
+                <view>订单编号：mw20181001111111</view>
+                <view>萌伴号：100006</view>
+                <view>技能服务：LOL游戏</view>
+                <view>时长：5小时</view>
+                <view>支付总额：100元</view>
+                <view>下单时间：2018/10/01 20:45</view>
+            </view>
+        </view>
+        <view class='order_btn dafult_btn'>接单</view>
+    </view>
+    <!-- 用户 -->
+    <view class='order_item'>
+        <view class='order_cont_box'>
+            <view class='cont_top new_order'>
+                <view class='flex_center flex_items undone_order user'>
+                    <view class='active'>等待接单</view>
+                    <view>进行中</view>
+                    <view>已完成</view>
+                </view>
+            </view>
+            <view class='cont_row'>
+                <view>订单编号：mw20181001111111</view>
+                <view>萌伴号：100006</view>
+                <view>技能服务：LOL游戏</view>
+                <view>时长：5小时</view>
+                <view>支付总额：100元</view>
+                <view>下单时间：2018/10/01 20:45</view>
+            </view>
+        </view>
+        <view class='time_btn dafult_btn'>剩余  20:00</view>
+    </view>
+    <!-- 已处理订单 -->
+    <view class='order_item'>
+        <view class='order_cont_box'>
+            <view class='cont_top flex_center flex_items'>订单取消</view>
+            <view class='cont_row'>
+                <view>订单编号：mw20181001111111</view>
+                <view>萌伴号：100006</view>
+                <view>技能服务：LOL游戏</view>
+                <view>时长：5小时</view>
+                <view>支付总额：100元</view>
+                <view>下单时间：2018/10/01 20:45</view>
+            </view>
+        </view>
+    </view>
+</view>
