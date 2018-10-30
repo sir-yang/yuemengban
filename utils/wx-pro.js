@@ -1,4 +1,5 @@
 const Promise = require('../polyfill/es6-promise.js').Promise;
+let common = require('../utils/common.js');
 
 function promisify() {
     wx.pro = {}; // wx.pro 下面挂载着返回 promise 的 wx.API
@@ -86,13 +87,12 @@ function promisify() {
                 url: wx.getStorageSync('serverurl') + options.url,
                 method: options.method || 'GET',
                 header: {
-                    'Auth': '83150f5ebecd16443509a0d535f49154 ' + wx.getStorageSync('uid'),
-                    "formId": wx.getStorageSync("formId")
+                    'token': common.getAccessToken()
                 },
                 success: (res) => {
                     wx.removeStorageSync("formId")
                     if (res.statusCode >= 400) {
-                        console.log(res)
+                        console.log(res);
                         //console.error('wx.request fail [business]', res.statusCode, res.data)
                         if (res.statusCode === 401) {
                             wx.removeStorageSync("token");
@@ -109,6 +109,9 @@ function promisify() {
                         wx.hideLoading();
                         reject(res);
                     } else {
+                        if (res.data.err_code == 40002) {//token过期，刷新token
+                            common.refreshToken();
+                        }
                         //console.log('wx.request success', res.data)
                         resolve(res.data); // unwrap data
                         if (!res.data) {

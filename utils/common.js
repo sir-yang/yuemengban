@@ -19,40 +19,7 @@ function showTimeToast(title) {
         mask: true
     });
 }
-//倒计时计算
-function timeCountDown(that, timestamp) {
-    timestamp = util.formatTimeStamp(timestamp);
-    let now = Date.parse(new Date());
-    let t = timestamp - now;
-    if (Number(t) <= 0) {
-        clearInterval(that.data.time);
-        return {
-            hour: '00',
-            minute: '00',
-            second: '00'
-        };
-    }
-    let leftsecond = parseInt(t / 1000);
-    let day = Math.floor(leftsecond / (60 * 60 * 24));
-    let hour = Math.floor((leftsecond - (day * 24 * 60 * 60)) / 3600);
-    let minute = Math.floor((leftsecond - (day * 24 * 60 * 60) - (hour * 3600)) / 60);
-    let second = Math.floor(leftsecond - (day * 24 * 60 * 60) - (hour * 3600) - (minute * 60));
-    if (hour < 10) {
-        hour = '0' + hour;
-    }
-    if (minute < 10) {
-        minute = '0' + minute;
-    }
-    if (second < 10) {
-        second = '0' + second;
-    }
-    return {
-        day,
-        hour,
-        minute,
-        second
-    };
-}
+
 
 //滚动到顶部
 function isscrollToPage(that) {
@@ -160,7 +127,6 @@ function getToken() {
     return wx.pro.login({
 
     }).then((res) => {
-        console.log(res.code)
         let wxcode = res.code;
         let values = {
             code: wxcode,
@@ -183,9 +149,9 @@ function getToken() {
  */
 function refreshToken() {
     let values = {
-        refreshToken: getInfo('refresh_token')
+        fresh_token: getInfo('refresh_token')
     };
-    let url = '/api/token/refresh';
+    let url = 'api/login/refresh';
     return util.httpRequest(url, values, 'POST').then((data) => {
         if (data.err_code == 0) {
             setToken(data.token);
@@ -258,7 +224,6 @@ function dataListHandle(that, data, list, offset) {
     that.state.pageOnShow = true;
     that.state.isOnReachBottom = true;
     that.state.isonPullDownRefresh = false;
-    that.state.scrolltolower = true;
     wx.hideLoading();
     return {
         list,
@@ -267,15 +232,121 @@ function dataListHandle(that, data, list, offset) {
     };
 }
 
+/**
+ * 获取用户信息
+ */
+function getPersonInfo() {
+    let url = "api/user/getUser";
+    return util.httpRequest(url).then((res) => {
+        if (res.result == "success") {
+            setInfo('userInfo', res.results);
+            return res.results;
+        } else {
+            showClickModal(res.msg);
+            wx.hideLoading()
+        }
+    })
+}
+
+
+/**
+ * 绑定用户信息
+ */
+function userInfoBind(that, event) {
+    let detail = event.detail;
+    if (detail.hasOwnProperty('userInfo')) {
+        wx.showLoading({
+            title: '绑定中...',
+            mask: true
+        });
+        let val = {
+            nickName: detail.userInfo.nickName,
+            face: detail.userInfo.avatarUrl,
+            gender: detail.userInfo.gender
+        };
+
+        let url = 'api/user/saveUser';
+        util.httpRequest(url, val, 'POST').then((res) => {
+            console.log(JSON.stringify(res));
+            wx.hideLoading();
+            if (res.result == 'success') {
+                showClickModal('绑定成功');
+                getPersonInfo().then(() => {//重新获取信息
+                    console.log(1213);
+                });
+            } else {
+                showClickModal('绑定失败');
+            }
+        });
+    }
+}
+
+// 授权判断
+function authInfo(that, func) {
+    let myInfo = getInfo('userInfo');
+    if (myInfo.hasOwnProperty("id")) {
+        if (!myInfo.face && !myInfo.nickName && Number(getInfo("authALter")) === 0) {
+            that.setData({
+                authALter: true
+            });
+            func(false);
+            return;
+        }
+        func(true);
+    }
+}
+
+// 倒计时
+function timeCountDown(that, timestamp) {
+    let now = Date.parse(new Date());
+    let t = (timestamp * 1000) - now;
+    if (Number(t) <= 0) {
+        return {
+            day: '0',
+            hour: '00',
+            minute: '00',
+            second: '00'
+        };
+    }
+
+    let leftsecond = parseInt(t / 1000);
+    let day = Math.floor(leftsecond / (60 * 60 * 24));
+    let hour = Math.floor((leftsecond - (day * 24 * 60 * 60)) / 3600);
+    let minute = Math.floor((leftsecond - (day * 24 * 60 * 60) - (hour * 3600)) / 60);
+    let second = Math.floor(leftsecond - (day * 24 * 60 * 60) - (hour * 3600) - (minute * 60));
+    if (hour < 10) {
+        hour = '0' + hour;
+    }
+    if (minute < 10) {
+        minute = '0' + minute;
+    }
+    if (second < 10) {
+        second = '0' + second;
+    }
+    return {
+        day,
+        hour,
+        minute,
+        second
+    };
+}
+
 module.exports = {
-    timeCountDown,
+    isscrollToPage,
     goTopEvent,
     setStorage: setInfo,
     getStorage: getInfo,
+    isscrollToPage,
+    getAccessToken,
     getToken,
+    refreshToken,
     showClickModal,
     showTimeToast,
     dataListHandle,
     nullObj,
-    isNull
+    isNull,
+    getPersonInfo,
+    userInfoBind,
+    authInfo,
+    timeCountDown
 };

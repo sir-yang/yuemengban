@@ -1,3 +1,7 @@
+const app = getApp();
+let common = app.globalData.commonFun;
+let util = app.globalData.utilFun;
+
 const recorderManager = wx.getRecorderManager()
 
 const options = {
@@ -23,21 +27,33 @@ Page({
         playing: false
     },
 
+    state: {
+        audio: '',
+        dotAnFun: ''
+    },
+
     /**
      * 生命周期函数--监听页面加载
      */
-    onLoad: function(options) {
-
+    onLoad(options) {
+        let userInfo = common.getStorage('userInfo');
+        if (userInfo.type != 1) {
+            this.getDetailInfo(userInfo.id);
+        }
+        this.setData({
+            userInfo
+        });
     },
 
     /**
      * 生命周期函数--监听页面初次渲染完成
      */
-    onReady: function() {
+    onReady() {
         let that = this;
         // 监听录音
         recorderManager.onStart(() => {
             let voice = that.data.voice;
+            let playing = that.data.playing;
             if (voice) { //重新录音
                 voice = '';
                 playing = false;
@@ -54,18 +70,14 @@ Page({
         })
         recorderManager.onStop((res) => {
             console.log('recorder stop', res)
+            that.state.audio = res.tempFilePath;
+            clearInterval(that.state.dotAnFun);//停止动画
             that.setData({
                 status: 'start',
                 voice: res.tempFilePath
             });
-            const {
-                tempFilePath
-            } = res
         })
         recorderManager.onFrameRecorded((res) => {
-            const {
-                frameBuffer
-            } = res
             console.log('frameBuffer.byteLength', frameBuffer.byteLength)
         })
 
@@ -84,14 +96,13 @@ Page({
         })
         // 监听结束
         innerAudioContext.onEnded((res) => {
-            console.log('监听结束');
-            console.log(res);
+            console.log('监听结束', res);
             that.setData({
                 playing: false
             });
         })
         innerAudioContext.onError((res) => {
-            console.log(res.errMsg)
+            common.showClickModal(res.errMsg);
             console.log(res.errCode)
         })
     },
@@ -99,14 +110,14 @@ Page({
     /**
      * 生命周期函数--监听页面显示
      */
-    onShow: function() {
+    onShow() {
         var i = 1　　
         var dotAnData = wx.createAnimation({
             duration: 6000,
             transformOrigin: '1px 100px'
         })
         let that = this;
-        var dotAnFun = setInterval(function() {
+        that.state.dotAnFun = setInterval(function() {
             if (i == 60) {
                 clearInterval(dotAnFun);
             } else {
@@ -118,22 +129,8 @@ Page({
         }, 1000)
     },
 
-    /**
-     * 生命周期函数--监听页面隐藏
-     */
-    onHide: function() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面卸载
-     */
-    onUnload: function() {
-
-    },
-
     // 界面事件
-    applyEvent: function(event) {
+    applyEvent(event) {
         let that = this;
         let dataset = event.currentTarget.dataset;
         if (dataset.types == 'pause') { //暂停
@@ -141,7 +138,6 @@ Page({
             innerAudioContext.pause();
         } else if (dataset.types == 'play') { //播放
             console.log('播放');
-            console.log(this.data.voice);
             innerAudioContext.src = this.data.voice;
             innerAudioContext.play();
         } else if (dataset.types == 'record') { //重新录音
@@ -154,19 +150,13 @@ Page({
             }
         } else if (dataset.types == 'apply') { //成为萌伴
             console.log('成为萌伴');
-            return;
-            let url = '';
-            wx.uploadFile({
-                url,
-                filePath: that.data.voice,
-                name: 'file',
-                header: {
-                    'content-type': 'multipart/form-data'
-                },
-                success(res) {
-
-                }
-            })
+            // 判断审核状态
+            if (that.data.userInfo.type == 2) return;
+            if (that.state.audio) {
+                that.applyPartner(event.detail.formId);
+            } else {
+                common.showClickModal('您还未录入介绍呢');
+            }
         } else if (dataset.types == 'image') { //查看大图
             console.log('查看大图');
             return;
@@ -174,9 +164,47 @@ Page({
                 urls: []
             });
         }
+    },
+
+    // 获取萌伴信息
+    getDetailInfo(uid) {
+        let that = this;
+        let url = 'api/partner/getPage?id=' + uid;
+        util.httpRequest(url).then((res) => {
+            if (res.result == 'success') {
+                that.setData({
+                    voice: res.results.audio
+                });
+            }
+        });
+    },
+
+    // 调用申请
+    applyPartner(formId) {
+        let that = this;
+        let url ='api/partner/qiNiuToken';
+
+        util.httpRequest(url).then((res) => {
+            return wx.pro.uploadFile({
+                url: 'https://upload-z2.qiniup.com',
+                filePath: that.data.voice,
+                name: 'file',
+                formData: {
+                    token: res.token
+                }
+            });
+        }).then((res) => {
+            let key = JSON.parse(res.data).key;
+            let saveUrl = 'api/partner/savePartInfo';
+            let data = {
+                wx_form_id: formId,
+                uid: common.getStorage('userInfo').id,
+                audio: key
+            }
+            util.httpRequest(saveUrl, data, 'POST').then((res) => {
+                console.log(res);
+                common.showClickModal(res.msg);
+            });
+        });
     }
-
-
-    // 录音
-
 })

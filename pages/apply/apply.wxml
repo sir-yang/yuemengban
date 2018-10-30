@@ -7,13 +7,15 @@
             <view class='line'></view>
             <view class='line'></view>
         </view>
-        <view wx:if="{{voice && !playing}}" class='pause' catchtap='applyEvent' data-types='play'></view>
+        <image wx:if="{{voice && !playing}}" class='pause' src='/images/pause.png' catchtap='applyEvent' data-types='play'></image>
     </view>
 
     <view class='apply_btn_box flex_center flex_items'>
         <view wx:if="{{voice}}" class='default_btn' catchtap='applyEvent' data-types='record'>重新录音</view>
         <view wx:else class='default_btn' catchtap='applyEvent' data-types='record'>{{status == 'start' ? '开始录音' : '停止录音'}}</view>
-        <view class='default_btn apply_btn' catchtap='applyEvent' data-types='apply'>成为萌伴</view>
+        <form report-submit='true' bindsubmit='applyEvent' data-types='apply'>
+            <button form-type='submit' class='default_btn apply_btn'>{{userInfo.type == 2 ? "等待审核" : "成为萌伴"}}</button>
+        </form>
     </view>
 
     <view class='apply_bottom flex_start'>

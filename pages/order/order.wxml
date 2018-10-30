@@ -1,59 +1,36 @@
 
-<view>
+<view wx:if="{{requestStatus}}">
     <!-- 萌伴 -->
-    <view class='order_item'>
-        <view class='order_cont_box'>
-            <view class='cont_top new_order'>
-                <view class='flex_center flex_items undone_order'>
-                    <view>接单</view>
-                    <view class='active'>进行中</view>
-                    <view>已完成</view>
+    <block wx:if="{{list.length > 0}}">
+        <view wx:for="{{list}}" wx:key="" class='order_item'>
+            <view class='order_cont_box'>
+                <view wx:if="{{item.status == 1 || item.status == 2}}" class='cont_top new_order'>
+                    <view class='flex_center flex_items undone_order {{item.edit == 1 ? "" : "user"}}'>
+                        <view class='{{item.status == 1 ? "active" : ""}}'>{{item.edit == 1 ? "接单" : "等待接单"}}</view>
+                        <view class='{{item.status == 2 ? "active" : ""}}'>进行中</view>
+                        <view>已完成</view>
+                    </view>
+                </view>
+                <view wx:elif="{{item.status == 3}}" class='cont_top flex_center flex_items'>已完成</view>
+                <view wx:elif="{{item.status == 4 || item.status == 5}}" class='cont_top flex_center flex_items'>订单取消</view>
+                <view class='cont_row'>
+                    <view>订单编号：{{item.orderNo}}</view>
+                    <view>萌伴号：{{item.cuteNo}}</view>
+                    <view>技能服务：{{item.service}}</view>
+                    <view>时长：{{item.times}}小时</view>
+                    <view>支付总额：{{item.money}}元</view>
+                    <view>下单时间：{{item.addTime}}</view>
                 </view>
             </view>
-            <view class='cont_row'>
-                <view>订单编号：mw20181001111111</view>
-                <view>萌伴号：100006</view>
-                <view>技能服务：LOL游戏</view>
-                <view>时长：5小时</view>
-                <view>支付总额：100元</view>
-                <view>下单时间：2018/10/01 20:45</view>
-            </view>
+            <!-- 萌伴 -->
+            <block wx:if="{{item.edit == 1}}">
+                <view wx:if="{{item.status == 1}}" class='order_btn dafult_btn' catchtap='orderEvent' data-types='receive' data-index='{{index}}'>接单</view>
+                <view wx:elif="{{item.status == 2}}" class='order_btn dafult_btn' catchtap='orderEvent' data-types='finish' data-index='{{index}}'>完成</view>
+            </block>
+            <!-- 用户 -->
+            <view wx:if="{{item.edit == 0 && item.status == 1}}" class='time_btn dafult_btn'>剩余  {{item.minute}}:{{item.second}}</view>
         </view>
-        <view class='order_btn dafult_btn'>接单</view>
-    </view>
-    <!-- 用户 -->
-    <view class='order_item'>
-        <view class='order_cont_box'>
-            <view class='cont_top new_order'>
-                <view class='flex_center flex_items undone_order user'>
-                    <view class='active'>等待接单</view>
-                    <view>进行中</view>
-                    <view>已完成</view>
-                </view>
-            </view>
-            <view class='cont_row'>
-                <view>订单编号：mw20181001111111</view>
-                <view>萌伴号：100006</view>
-                <view>技能服务：LOL游戏</view>
-                <view>时长：5小时</view>
-                <view>支付总额：100元</view>
-                <view>下单时间：2018/10/01 20:45</view>
-            </view>
-        </view>
-        <view class='time_btn dafult_btn'>剩余  20:00</view>
-    </view>
-    <!-- 已处理订单 -->
-    <view class='order_item'>
-        <view class='order_cont_box'>
-            <view class='cont_top flex_center flex_items'>订单取消</view>
-            <view class='cont_row'>
-                <view>订单编号：mw20181001111111</view>
-                <view>萌伴号：100006</view>
-                <view>技能服务：LOL游戏</view>
-                <view>时长：5小时</view>
-                <view>支付总额：100元</view>
-                <view>下单时间：2018/10/01 20:45</view>
-            </view>
-        </view>
-    </view>
+        <view wx:if="{{!hasNext}}" class='mt20 mb20 txt_center f24 c9'>— 没有更多数据 —</view>
+    </block>
+    <view wx:else class='notRecording'>暂无订单记录</view>
 </view>

@@ -35,10 +35,19 @@
     height: 74rpx;
     background: #fff;
     border-radius: 8rpx;
-    margin: 0 16rpx;
+    margin: 0 14rpx;
 }
 
 .pause {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60rpx;
+    height: 75rpx;
+}
+
+/* .pause {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -48,7 +57,7 @@
     border-width: 37rpx;
     border-style: solid;
     border-color: transparent transparent transparent #fff;
-}
+} */
 
 .apply_btn_box {
     margin-top: 60rpx;

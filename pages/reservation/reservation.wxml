@@ -3,13 +3,9 @@
         <view class='service_box'>
             <view class='service_title'>服务技能</view>
             <view class='service_list'>
-                <view class='service_item flex_between flex_items {{serverId == 0 ? "active" : ""}}' catchtap='reservationEvent' data-types='service' data-index='0'>
-                    <view class='f32 cfea'>王者荣耀</view>
-                    <view class='f32 cfea'>30/小时</view>
-                </view>
-                <view class='service_item flex_between flex_items {{serverId == 1 ? "active" : ""}}' catchtap='reservationEvent' data-types='service' data-index='1'>
-                    <view class='f32 cfea'>王者荣耀</view>
-                    <view class='f32 cfea'>30/小时</view>
+                <view wx:for="{{details.trick}}" wx:key="" class='service_item flex_between flex_items {{serverId == index ? "active" : ""}}' catchtap='reservationEvent' data-types='service' data-index='{{index}}'>
+                    <view class='f32 cfea'>{{item.name}}</view>
+                    <view class='f32 cfea'>{{item.money}}/小时</view>
                 </view>
             </view>
         </view>
@@ -18,11 +14,9 @@
         <view class='accompany_time'>
             <view class='service_title'>陪玩时间</view>
             <view class='flex_between flex_items'>
-                <view class='time_item {{timeId == 0 ? "active" : ""}}' catchtap='reservationEvent' data-types='time' data-index='0'>1小时</view>
-                <view class='time_item {{timeId == 1 ? "active" : ""}}' catchtap='reservationEvent' data-types='time' data-index='1'>2小时</view>
-                <view class='time_item {{timeId == 2 ? "active" : ""}}' catchtap='reservationEvent' data-types='time' data-index='2'>5小时</view>
+                <view wx:for="{{details.times}}" wx:key="" class='time_item {{timeId == index ? "active" : ""}}' catchtap='reservationEvent' data-types='time' data-index='{{index}}'>{{item}}小时</view>
             </view>
-            <view class='total_money'>支付总额：300元</view>
+            <view class='total_money'>支付总额：{{totalMoney}}元</view>
             <view class='call_partner_btn' catchtap='reservationEvent' data-types='sure'>呼叫萌伴</view>
         </view>
 
