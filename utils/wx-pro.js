@@ -98,20 +98,9 @@ function promisify() {
                             wx.removeStorageSync("token");
                             //wx.request(req);
                         }
-                        if (res.statusCode === 410) {
-                            wx.showModal({
-                                title: '提示',
-                                content: res.data,
-                                showCancel: false,
-                                success(_res) {}
-                            });
-                        }
                         wx.hideLoading();
                         reject(res);
                     } else {
-                        if (res.data.err_code == 40002) {//token过期，刷新token
-                            common.refreshToken();
-                        }
                         //console.log('wx.request success', res.data)
                         resolve(res.data); // unwrap data
                         if (!res.data) {

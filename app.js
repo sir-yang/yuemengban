@@ -6,10 +6,9 @@ let common = require('utils/common.js');
 App({
     checkToken: false,
     onLaunch(_options) {
-        // console.log(_options);
         this.checkToken = true;
         // wx.setStorageSync("serverurl", "http://192.168.0.104/");
-        wx.setStorageSync("serverurl", "http://mengban.loaderwang.cn/");
+        wx.setStorageSync("serverurl", "https://menban.loaderwang.cn/");
     },
 
     onShow(options) {
@@ -20,6 +19,10 @@ App({
                 console.log('no token');
             } else if (that.checkToken) {
                 that.checkToken = false;
+                let myInfo = common.getStorage('userInfo');
+                if (!myInfo.face && !myInfo.nickName) {
+                    return common.getPersonInfo().then(() => {});
+                }
             }
             that.refresh(options);
         }).catch((_e) => {
@@ -33,7 +36,8 @@ App({
                     wx.showModal({
                         title: '提示',
                         content: '当前微信版本过低，请升级至高版本',
-                        showCancel: false
+                        showCancel: false,
+                        confirmColor: '#FEA2C5'
                     });
                 }
             }
@@ -45,7 +49,6 @@ App({
         let that = this;
         common.getToken().then((_res) => {
             common.getPersonInfo().then((info) => {
-                console.log(info);
                 getApp().globalData.tokenUpdated();
             });
         });
@@ -54,6 +57,6 @@ App({
     globalData: {
         commonFun: common,
         utilFun: util,
-        tokenUpdated: null,
+        tokenUpdated: null
     }
 });

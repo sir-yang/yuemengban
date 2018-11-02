@@ -1,7 +1,13 @@
 
 <view>
-    <view class='audio_box'>
-        <view class='crl-dot' animation='{{dotAnData}}'></view>
+    <view class='circleProgress_wrapper'>
+        <view class='wrapper right'>
+            <view class='circleProgress rightcircle' animation="{{animation1}}"></view>
+        </view>
+        <view class='wrapper left'>
+            <view class='circleProgress leftcircle'></view>
+        </view>
+
         <image class='audio_img' src='/images/audio_img.png'></image>
         <view wx:if="{{voice && playing}}" class='play flex_start flex_items' catchtap='applyEvent' data-types='pause'>
             <view class='line'></view>
@@ -11,8 +17,11 @@
     </view>
 
     <view class='apply_btn_box flex_center flex_items'>
-        <view wx:if="{{voice}}" class='default_btn' catchtap='applyEvent' data-types='record'>重新录音</view>
-        <view wx:else class='default_btn' catchtap='applyEvent' data-types='record'>{{status == 'start' ? '开始录音' : '停止录音'}}</view>
+        <block wx:if="{{recordAuth}}">
+            <view wx:if="{{voice}}" class='default_btn' catchtap='applyEvent' data-types='record'>重新录音</view>
+            <view wx:else class='default_btn' catchtap='applyEvent' data-types='record'>{{status == 'start' ? '开始录音' : '停止录音'}}</view>
+        </block>
+        <button wx:else open-type='openSetting' class='default_btn' bindopensetting="applyEvent" data-types='auth'>{{voice ? '重新录音' : '开始录音'}}</button>
         <form report-submit='true' bindsubmit='applyEvent' data-types='apply'>
             <button form-type='submit' class='default_btn apply_btn'>{{userInfo.type == 2 ? "等待审核" : "成为萌伴"}}</button>
         </form>
@@ -28,7 +37,7 @@
         </view>
         <view class='bottom_right'>
             <view class='code_bg'>
-                <image src='/images/kf_code.png' catchtap='applyEvent' data-types='image'></image>
+                <image src='{{customer.small_img}}' catchtap='applyEvent' data-types='image'></image>
             </view>
             <view class='f24 cfea txt_center'>·长按识别二维码·</view>
         </view>

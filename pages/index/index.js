@@ -18,29 +18,33 @@ Page({
     },
 
     state: {
-        offset: 0,
-        limit: 10,
-        hasmore: true,
         pageOnShow: false,
         isOnReachBottom: false,
         isonPullDownRefresh: true,
-        timing: false
+        timing: false,
+        times: ''
     },
 
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad(options) {
+        wx.showLoading({
+            title: '加载中...',
+            mask: true
+        });
         let that = this;
-        let token = common.getAccessToken();
-        if (token) {
-            that.getPartnerList(0);
-        } else {
-            getApp().globalData.tokenUpdated = function () {
-                console.log('update success');
-                that.getPartnerList(0);
-            };
-        }
+        setTimeout(function() {
+            let token = common.getAccessToken();
+            if (token) {
+                that.getPartnerList();
+            } else {
+                getApp().globalData.tokenUpdated = function () {
+                    console.log('update success');
+                    that.getPartnerList();
+                }
+            }
+        },1000);
     },
 
     /**
@@ -55,10 +59,20 @@ Page({
                 playing: true
             });
         })
+
+        innerAudioContext.onStop((res) => {
+            console.log('监听停止', res);
+            that.state.timing = false;
+            that.setData({
+                playing: false
+            });
+            clearTimeout(that.state.times);
+        })
+
         // 监听停止
         innerAudioContext.onEnded((res) => {
             console.log('监听结束');
-            console.log(res);
+            that.state.timing = false;
             that.setData({
                 playing: false
             });
@@ -66,6 +80,7 @@ Page({
 
         // 监听错误
         innerAudioContext.onError((res) => {
+            that.state.timing = false;
             common.showClickModal('播放失败');
         })
     },
@@ -75,8 +90,13 @@ Page({
      */
     onShow() {
         if (!this.state.pageOnShow) return;
-        this.getPartnerList(0);
+        this.getPartnerList();
     },
+
+    onHide() {
+        innerAudioContext.stop();
+    },
+
 
     /**
      * 页面相关事件处理函数--监听用户下拉动作
@@ -87,8 +107,7 @@ Page({
             title: '加载中...',
             mask: true
         });
-        this.state.offset = 0;
-        this.getPartnerList(0);
+        this.getPartnerList();
     },
 
     /**
@@ -96,18 +115,22 @@ Page({
      */
     onShareAppMessage() {
         return {
+            title: '一个最真实的萌妹在线游戏陪玩服务平台',
             path: '/pages/index/index'
         }
     },
 
     // 首页事件
-    homeEvent: function(event) {
+    homeEvent(event) {
         let dataset = event.currentTarget.dataset;
         let current = this.data.current;
         let list = this.data.list;
+        if (list.length == 0 && dataset.types != 'mine') {
+            common.showClickModal('暂无萌伴');
+            return;
+        }
 
         if (dataset.types == 'audio') { //播放语音
-            console.log('语音播放');
             if (this.state.timing) return;
             this.state.timing = true;
             this.settime(list[current].audio_times);
@@ -115,41 +138,27 @@ Page({
             innerAudioContext.src = list[current].audio;
             innerAudioContext.play();
         } else if (dataset.types == 'prev') { //上一个
-            console.log('上一个');
             if (current == 0) {
-                common.showClickModal('已经是第一个了');
-                return;
+                current = list.length - 1;
+            } else {
+                current = Number(current) - 1;
             }
-            current = Number(current) - 1;
             this.setData({
                 current,
                 audioTime: this.downTime(list[current].audio_times)
             });
         } else if (dataset.types == 'next') { //下一个
-            console.log('下一个');
-            if (list.length == 0) return;
             if (current == (list.length - 1)) {
-                common.showClickModal('没有更多了');
-                return;
+                current = 0;
+            } else {
+                current = Number(current) + 1;
             }
 
-            // 查看到只剩两条时，加载更多
-            if (current == (list.length - 2) && this.data.hasNext) {
-                if (this.state.isonPullDownRefresh) return;
-                if (!this.state.isOnReachBottom) return;
-                if (!this.state.hasmore) return;
-                this.state.offset = this.state.offset + this.state.limit;
-                this.getPartnerList(this.state.offset);
-                this.state.isOnReachBottom = false;
-            }
-
-            current = Number(current) + 1;
             this.setData({
                 current,
                 audioTime: this.downTime(list[current].audio_times)
             });
         } else if (dataset.types == 'sure') { //约
-            console.log('约定');
             let current = this.data.current;
             let myInfo = common.getStorage('userInfo');
             if (list[current].id == myInfo.id) {
@@ -165,9 +174,12 @@ Page({
                 }
             });
         } else if (dataset.types == 'mine') { //我的
-            console.log('我的');
-            wx.navigateTo({
-                url: '/pages/mine/mine'
+            common.authInfo(this, (status) => {
+                if (status) {
+                    wx.navigateTo({
+                        url: '/pages/mine/mine'
+                    });
+                }
             });
         }
     },
@@ -205,7 +217,7 @@ Page({
             that.setData({
                 audioTime
             });
-            setTimeout(function() {
+            that.state.times = setTimeout(function() {
                 that.settime(countdown)
             }, 1000)
         }
@@ -221,25 +233,23 @@ Page({
     },
 
     // 获取萌伴列表
-    getPartnerList(offset) {
+    getPartnerList() {
         let that = this;
         let userInfo = common.getStorage('userInfo');
-        let url = 'api/partner/getPage?offset=' + offset + '&limit=' + that.state.limit;
+        let url = 'api/partner/getPage';
         if (userInfo.type == 3) {
-            url += '&uid=' + userInfo.id
+            url += '?uid=' + userInfo.id
         }
         util.httpRequest(url).then((res) => {
             wx.hideLoading();
             if (res.result == 'success') {
-                let list = that.data.list;
-                let handle = common.dataListHandle(that, res, list, offset);
-                if (offset == 0 && userInfo.type == 3) {
-                    handle.list.unshift(res.data);
+                let list = res.results;
+                if (userInfo.type == 3) {
+                    list.unshift(res.data);
                 }
                 that.setData({
-                    list: handle.list,
-                    hasNext: handle.hasNext,
-                    audioTime: that.downTime(handle.list[0].audio_times)
+                    list,
+                    audioTime: that.downTime(list[0].audio_times)
                 })
             } else {
                 common.showClickModal(res.msg);

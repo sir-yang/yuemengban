@@ -30,7 +30,16 @@ Page({
             title: '加载中...',
             mask: true
         });
-        this.getOrderList(0);
+        let that = this;
+        let token = common.getAccessToken();
+        if (token) {
+            that.getOrderList(0);
+        } else {
+            getApp().globalData.tokenUpdated = function () {
+                console.log('update success');
+                that.getOrderList(0);
+            }
+        }
     },
 
     /**
@@ -121,7 +130,7 @@ Page({
     // 接单
     receiveOrder(index) {
         let that = this;
-        let list = this.data.list;
+        let list = that.data.list;
         let url = 'api/order/receive';
         wx.showLoading({
             title: '处理中...',
@@ -131,9 +140,8 @@ Page({
             wx.hideLoading();
             if (res.result == 'success') {
                 list[index].status = 2;
-                that.setData({
-                    list
-                });
+                clearInterval(that.state.time);
+                that.downTime(list);
             } else {
                  common.showClickModal(res.msg);
             }
@@ -143,7 +151,7 @@ Page({
     // 完成订单
     finishOrder(index) {
         let that = this;
-        let list = this.data.list;
+        let list = that.data.list;
         let url = 'api/order/finish';
         wx.showLoading({
             title: '处理中...',
@@ -153,9 +161,8 @@ Page({
             wx.hideLoading();
             if (res.result == 'success') {
                 list[index].status = 3;
-                that.setData({
-                    list
-                });
+                clearInterval(that.state.time);
+                that.downTime(list);
             } else {
                 common.showClickModal(res.msg);
             }

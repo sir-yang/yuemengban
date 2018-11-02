@@ -5,7 +5,8 @@
         "pages/reservation/reservation",
         "pages/apply/apply",
         "pages/order/order",
-        "pages/wallet/wallet"
+        "pages/wallet/wallet",
+        "pages/dome/dome"
     ],
     "requiredBackgroundModes": [
         "audio"

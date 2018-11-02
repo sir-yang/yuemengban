@@ -12,6 +12,10 @@
     margin-right: 20rpx;
 }
 
+.mt10 {
+    margin-top: 10rpx;
+}
+
 .mt20 {
     margin-top: 20rpx;
 }

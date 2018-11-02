@@ -10,7 +10,8 @@ Page({
     data: {
         serverId: 0,
         timeId: 1,
-        totalMoney: 0
+        totalMoney: 0,
+        customer: ''
     },
 
     state: {
@@ -22,32 +23,30 @@ Page({
      */
     onLoad(options) {
         this.state.options = options;
-        this.partnerDetail();
-    },
-
-    /**
-     * 生命周期函数--监听页面初次渲染完成
-     */
-    onReady() {
-
-    },
-
-    /**
-     * 生命周期函数--监听页面显示
-     */
-    onShow() {
-
-    },
-
-    /**
-     * 用户点击右上角分享
-     */
-    onShareAppMessage() {
-
+        let that = this;
+        let token = common.getAccessToken();
+        if (token) {
+            common.getServiceInfo().then((data) => {
+                that.setData({
+                    customer: data
+                });
+            })
+            that.partnerDetail();
+        } else {
+            getApp().globalData.tokenUpdated = function () {
+                console.log('update success');
+                common.getServiceInfo().then((data) => {
+                    that.setData({
+                        customer: data
+                    });
+                })
+                that.partnerDetail();
+            }
+        }
     },
 
     // 页面事件
-    reservationEvent: function(event) {
+    reservationEvent(event) {
         let dataset = event.currentTarget.dataset;
         let details = this.data.details;
         let serverId = this.data.serverId;
@@ -70,14 +69,11 @@ Page({
             });
         } else if (dataset.types == 'img') { //查看图片
             wx.previewImage({
-                urls: ["http://img02.tooopen.com/images/20150928/tooopen_sy_143912755726.jpg"]
+                urls: [this.data.customer.o_bject_img]
             });
         } else if (dataset.types == 'sure') { //呼叫萌伴
             console.log('呼叫萌伴');
-            this.submitOrder();
-            // wx.redirectTo({
-            //     url: '/pages/order/order'
-            // });
+            this.submitOrder(event);
         }
     },
 
@@ -106,13 +102,14 @@ Page({
     },
 
     // 下单
-    submitOrder() {
+    submitOrder(event) {
         let that = this;
         let url = 'api/order/orderSave';
         let details = that.data.details;
         let serverId = that.data.serverId;
         let timeId = that.data.timeId;
         let data = {
+            wx_form_id: event.detail.formId,
             cuteId: that.state.options.id,
             trickId: details.trick[serverId].id,
             times: timeId
@@ -128,15 +125,45 @@ Page({
                     title: '提示',
                     content: '下单成功',
                     showCancel: false,
+                    confirmColor: '#FEA2C5',
                     success() {
                         wx.redirectTo({
                             url: '/pages/order/order'
                         });
                     }
-                })
+                });
+
+                // that.requestPay(res.results);
             } else {
                 common.showClickModal(res.msg);
             }
         });
+    },
+
+    // 调用微信支付
+    requestPay(vals) {
+        wx.requestPayment({
+            timeStamp: vals.timeStamp, //时间戳从1970年1月1日00:00:00至今的秒数,即当前的时间
+            nonceStr: vals.nonceStr, //随机字符串，长度为32个字符以下。
+            package: vals.package, //统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=*
+            signType: vals.signType,
+            paySign: vals.paySign, //签名
+            success(res) {
+                wx.showModal({
+                    title: '提示',
+                    content: '下单成功',
+                    showCancel: false,
+                    confirmColor: '#FEA2C5',
+                    success() {
+                        wx.redirectTo({
+                            url: '/pages/order/order'
+                        });
+                    }
+                });
+            },
+            fail(res) {
+                common.showClickModal('支付失败');
+            }
+        })
     }
 })

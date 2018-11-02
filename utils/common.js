@@ -7,6 +7,7 @@ function showClickModal(title) {
         title: '提示',
         content: title,
         showCancel: false,
+        confirmColor: '#FEA2C5',
         success(_res) { }
     });
 }
@@ -136,7 +137,6 @@ function getToken() {
     }).then((data) => {
         if (data.result == 'success') {
             setToken(data.results);
-            setInfo("hasLoading", true);
         } else {
             console.log(data.msg);
         }
@@ -271,14 +271,25 @@ function userInfoBind(that, event) {
             wx.hideLoading();
             if (res.result == 'success') {
                 showClickModal('绑定成功');
-                getPersonInfo().then(() => {//重新获取信息
-                    console.log(1213);
-                });
+                //重新获取信息
+                getPersonInfo().then(() => {});
             } else {
                 showClickModal('绑定失败');
             }
         });
     }
+}
+
+// 客服信息
+function getServiceInfo() {
+    let url = 'api/user/getService';
+    return util.httpRequest(url).then((res) => {
+        if (res.result == 'success') {
+            return res.results.img
+        } else {
+            showClickModal(res.msg);
+        }
+    });
 }
 
 // 授权判断
@@ -347,6 +358,7 @@ module.exports = {
     isNull,
     getPersonInfo,
     userInfoBind,
+    getServiceInfo,
     authInfo,
     timeCountDown
 };

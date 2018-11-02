@@ -9,70 +9,70 @@ Page({
      */
     data: {
         selfInfo: '',
-        checked: false
+        checked: false,
+        announcement: ''
     },
 
     state: {
-        gonggao_timer: null
+        pageOnShow: false,
+        gonggao_timer: null,
+        times: ''
     },
 
     /**
      * 生命周期函数--监听页面加载
      */
     onLoad(options) {
+        let that = this;
         wx.showLoading({
             title: '加载中...',
             mask: true
         });
+        let token = common.getAccessToken();
+        if (token) {
+            that.getInfo();
+        } else {
+            getApp().globalData.tokenUpdated = function () {
+                console.log('update success');
+                that.getInfo();
+            }
+        }
     },
 
     /**
      * 生命周期函数--监听页面显示
      */
     onShow() {
+        if (!this.state.pageOnShow) return;
         this.getInfo();
     },
 
     store(patch){
         this.setData(patch);
     },
-    
-    marquee(title) {
-        var that = this;
-        if (that.state.gonggao_timer) {
-            clearTimeout(that.state.gonggao_timer);
-        }
-        let marq = that.data.marquee;
+
+    // 公告滚动
+    announcement(title) {
+        let that = this;
+        clearTimeout(that.state.times);
+        let length = title.length * 16;
         let windowWidth = wx.getSystemInfoSync().windowWidth; // 屏幕宽度
-        // 根据字体大小计算长度
-        let length = (title.length * 16) + 32;
-        let gonggao = {
-            title
-        };
-        // 计算动画时间 以每秒60px计算
-        let duration = parseInt(((length + (windowWidth - 108) ) / 60) * 1000);
-        let animation = wx.createAnimation({
-            duration: 1000,
+        let duration = parseInt(((length + (windowWidth - 108)) / 60) * 1000);
+        that.animation = wx.createAnimation({
+            duration,
+            timingFunction: 'linear'
+        })
+        that.animation.translate(windowWidth - 108).step({
+            duration: 100,
             timingFunction: 'step-start'
         });
-        animation.translate(windowWidth - 108).step();
-        gonggao.animation = animation.export();
-        that.store({
-            gonggao
+        that.animation.translate(-length).step();
+        that.setData({
+            animation: that.animation.export()
         });
-        that.state.gonggao_timer = setTimeout(() => {
-            let animation1 = wx.createAnimation({
-                duration
-            });
-            animation1.translate(-(length - 108)).step();
-            gonggao.animation = animation1.export();
-            that.store({
-                gonggao
-            });
-            that.state.gonggao_timer = setTimeout(() => {
-                that.marquee(that.data.selfInfo.inform.content);
-            }, duration);
-        }, 1000);
+        that.state.times = setTimeout(() => {
+            that.announcement(title)
+        }, duration)
     },
 
     mineEvent(event) {
@@ -109,7 +109,8 @@ Page({
         util.httpRequest(url).then((res) => {
             wx.hideLoading();
             if (res.result == 'success') {
-                that.marquee(res.results.inform.content);
+                that.state.pageOnShow = true;
+                that.announcement(res.results.inform.content);
                 that.setData({
                     selfInfo: res.results,
                     checked: res.results.statusId == 1 ? true : false

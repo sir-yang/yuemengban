@@ -17,7 +17,9 @@
                 <view wx:for="{{details.times}}" wx:key="" class='time_item {{timeId == index ? "active" : ""}}' catchtap='reservationEvent' data-types='time' data-index='{{index}}'>{{item}}小时</view>
             </view>
             <view class='total_money'>支付总额：{{totalMoney}}元</view>
-            <view class='call_partner_btn' catchtap='reservationEvent' data-types='sure'>呼叫萌伴</view>
+            <form report-submit='true' bindsubmit="reservationEvent" data-types='sure'>
+                <button form-type='submit' class='call_partner_btn'>呼叫萌伴</button>
+            </form>
         </view>
 
         <!-- 萌伴信息 -->
@@ -30,7 +32,7 @@
             <view class='flex_start flex_items'>
                 <view class='dot'></view>
                 <view class='label'>萌萌微信</view>
-                <image class='wechat_img' catchtap='reservationEvent' data-types='img' src='/images/weixin.png'></image>
+                <image class='wechat_img' catchtap='reservationEvent' data-types='img' src='{{customer.small_img}}'></image>
             </view>
             <view class='flex_start'>
                 <view class='dot flex_shrink' style='margin-top: 19rpx;'></view>

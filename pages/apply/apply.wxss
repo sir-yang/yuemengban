@@ -1,4 +1,4 @@
-.audio_box {
+/* .audio_box {
     position: relative;
     width: 400rpx;
     height: 400rpx;
@@ -14,7 +14,7 @@
     width: 4rpx;
     height: 4rpx;
     background: #000;
-}
+} */
 
 .audio_img {
     display: block;
@@ -46,18 +46,6 @@
     width: 60rpx;
     height: 75rpx;
 }
-
-/* .pause {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 0;
-    height: 0;
-    border-width: 37rpx;
-    border-style: solid;
-    border-color: transparent transparent transparent #fff;
-} */
 
 .apply_btn_box {
     margin-top: 60rpx;
@@ -113,4 +101,116 @@
     width: 232rpx;
     height: 232rpx;
     margin: auto;
+}
+
+
+
+
+.circleProgress_wrapper {
+    position: relative;
+    overflow: hidden;
+    width: 400rpx;
+    height: 400rpx;
+    margin: 80rpx auto 60rpx;
+}
+
+.wrapper {
+    width: 200rpx;
+    height: 400rpx;
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+}
+
+.right {
+    right: 0;
+}
+
+.left {
+    left: 0;
+}
+
+.circleProgress {
+    width: 384rpx;
+    height: 384rpx;
+    border: 8rpx solid rgba(255, 134, 181, 1);
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+.rightcircle {
+    border-top: 8rpx solid rgba(255, 134, 181, 0.2);
+    border-right: 8rpx solid rgba(255, 134, 181, 0.2);    
+    right: 0;
+    /* animation: circle_right 120s linear infinite;
+    -webkit-animation: circle_right 120s linear infinite;
+    animation-iteration-count: 1;
+    -webkit-animation-iteration-count: 1; */
+}
+
+.leftcircle {
+    border-bottom: 8rpx solid rgba(255, 134, 181, 0.2);
+    border-left: 8rpx solid rgba(255, 134, 181, 0.2);
+    left: 0;
+    /* animation: circle_left 120s linear infinite;
+    -webkit-animation: circle_left 120s linear infinite;
+    animation-iteration-count: 1;
+    -webkit-animation-iteration-count: 1; */
+}
+
+@keyframes circle_right {
+    0% {
+        transform: rotate(45deg);
+    }
+
+    50% {
+        transform: rotate(225deg);
+    }
+
+    100% {
+        transform: rotate(225deg);
+    }
+}
+@-webkit-keyframes circle_right {
+    0% {
+        -webkit-transform: rotate(45deg);
+    }
+
+    50% {
+        -webkit-transform: rotate(225deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(225deg);
+    }
+}
+
+@keyframes circle_left {
+    0% {
+        transform: rotate(45deg);
+    }
+
+    50% {
+        transform: rotate(45deg);
+    }
+
+    100% {
+        transform: rotate(225deg);
+    }
+}
+@-webkit-keyframes circle_left {
+    0% {
+        -webkit-transform: rotate(45deg);
+    }
+
+    50% {
+        -webkit-transform: rotate(45deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(225deg);
+    }
 }

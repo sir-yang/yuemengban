@@ -3,12 +3,13 @@
         <view class="userInfoGongGao flex_start">
             <view class='f32 cf'>通知：</view>
             <view class="marquee_box flex1">
-                <view animation="{{gonggao.animation}}" class="marquee_text">{{selfInfo.inform.content}}</view>
+                <view animation="{{animation}}" class="marquee_text">{{selfInfo.inform.content}}</view>
             </view>
         </view>
         <view class='flex_column flex_items'>
             <image class='head_img' src='{{selfInfo.face}}'></image>
-            <view class='f32 cf'>邀请码 {{selfInfo.uCard}}</view>
+            <view wx:if="{{selfInfo.type != 3}}" class='f32 cf'>邀请码 {{selfInfo.uCard}}</view>
+            <view wx:else class='f28 cf'>萌伴号 {{selfInfo.card}}</view>
         </view>
     </view>
 
@@ -24,17 +25,24 @@
                     <view class='line'></view>
                 </view>
                 <view class='right_box flex_start flex_items'>
+                    <view class='mr20'>可接单</view>
                     <switch color='#FEA2C5' checked='{{checked}}' bindchange="mineEvent" data-types='switch'></switch>
                 </view>
             </view>
             <view class='features_item flex_start flex_items' catchtap='mineEvent' data-types='wallet'>
-                <view class='left_box flex_start flex_items'>
+                <view class='left_box flex_start flex_items flex_shrink'>
                     <view>我的钱包</view>
                     <view class='line'></view>
                 </view>
-                <view>
-                    <view class='right_text'>可提现金额：{{selfInfo.account.remainMoney}}元</view>
-                    <view class='right_text'>奖励金：{{selfInfo.account.rewards}}金</view>
+                <view class='right_text flex_column flex_between'>
+                    <view class='flex_start'>
+                        <view class='justify'>可提现金额</view>
+                        <view>：{{selfInfo.account.remainMoney}}元</view>
+                    </view>
+                    <view class='flex_start mt10'>
+                        <view class='justify'>奖励金</view>
+                        <view>：{{selfInfo.account.rewards}}金</view>
+                    </view>
                 </view>
             </view>
             <view class='features_item flex_start flex_items' catchtap='mineEvent' data-types='order'>
@@ -42,7 +50,10 @@
                     <view>订单中心</view>
                     <view class='line'></view>
                 </view>
-                <view class='right_text'>共下单：{{selfInfo.orderNum}}单</view>
+                <view class='right_text flex_start'>
+                    <view class='justify'>共下单</view>
+                    <view>：{{selfInfo.orderNum}}单</view>
+                </view>
             </view>
         </view>
     </view>
@@ -51,7 +62,6 @@
     <view class='btn_box flex_between'>
         <view class='mine_btn active' catchtap='mineEvent' data-types='apply'>成为萌伴</view>
         <button open-type='contact' plain class='mine_btn' bindcontact="mineEvent" data-types='contact' hover-class='none'>客服帮助</button>
-        <!-- <view class='mine_btn' catchtap="mineEvent" data-types='contact'>客服帮助</view> -->
     </view>
 
 </view>

@@ -1,0 +1,130 @@
+.circleProgress_wrapper {
+    width: 400rpx;
+    height: 400rpx;
+    margin: 80rpx auto 60rpx;
+    position: relative;
+}
+
+.wrapper {
+    width: 200rpx;
+    height: 400rpx;
+    position: absolute;
+    top: 0;
+    overflow: hidden;
+}
+
+.right {
+    right: 0;
+}
+
+.left {
+    left: 0;
+}
+
+.circleProgress {
+    width: 384rpx;
+    height: 384rpx;
+    border: 8rpx solid rgba(255, 134, 181, 1);
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+.rightcircle {
+    border-top: 8rpx solid rgba(255, 134, 181, 0.2);
+    border-right: 8rpx solid rgba(255, 134, 181, 0.2);
+    right: 0;
+    animation: circle_right 5s linear infinite;
+    -webkit-animation: circle_right 5s linear infinite;
+    animation-iteration-count: 1;
+    -webkit-animation-iteration-count: 1; /* Safari 和 Chrome */
+}
+
+.leftcircle {
+    border-bottom: 8rpx solid rgba(255, 134, 181, 0.2);
+    border-left: 8rpx solid rgba(255, 134, 181, 0.2);
+    left: 0;
+    animation: circle_left 5s linear infinite;
+    -webkit-animation: circle_left 5s linear infinite;
+    animation-iteration-count: 1;
+    -webkit-animation-iteration-count: 1; /* Safari 和 Chrome */
+}
+
+@keyframes circle_right {
+    0% {
+        -webkit-transform: rotate(45deg);
+    }
+
+    50% {
+        -webkit-transform: rotate(225deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(225deg);
+    }
+}
+
+@-webkit-keyframes circle_right {
+    0% {
+        -webkit-transform: rotate(45deg);
+    }
+
+    50% {
+        -webkit-transform: rotate(225deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(225deg);
+    }
+}
+
+@keyframes circle_left {
+    0% {
+        -webkit-transform: rotate(45deg);
+    }
+
+    50% {
+        -webkit-transform: rotate(45deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(225deg);
+    }
+}
+
+@-webkit-keyframes circle_left {
+    0% {
+        -webkit-transform: rotate(45deg);
+    }
+
+    50% {
+        -webkit-transform: rotate(45deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(225deg);
+    }
+}
+
+/* 文字滚动 */
+
+.example {
+    display: block;
+    width: 100%;
+    height: 100rpx;
+}
+
+.marquee_box {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.marquee_text {
+    white-space: nowrap;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
