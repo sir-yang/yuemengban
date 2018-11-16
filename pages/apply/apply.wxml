@@ -1,11 +1,11 @@
 
 <view>
-    <view class='circleProgress_wrapper'>
-        <view class='wrapper right'>
+    <view class='circleProgress_wrapper flex_start'>
+        <view class='wrapper right flex1'>
             <view class='circleProgress rightcircle' animation="{{animation1}}"></view>
         </view>
-        <view class='wrapper left'>
-            <view class='circleProgress leftcircle'></view>
+        <view class='wrapper left flex1'>
+            <view class='circleProgress leftcircle' animation="{{animation2}}"></view>
         </view>
 
         <image class='audio_img' src='/images/audio_img.png'></image>

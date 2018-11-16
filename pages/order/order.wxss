@@ -80,6 +80,19 @@
 .cont_row view:last-child {
     border-bottom: none;
 }
+.cont_row view text {
+    float: left;
+    width: 112rpx;
+    display: inline-block;
+    text-align: justify;
+    height: 80rpx;
+}
+.cont_row view text::after {
+    content: '';
+    display: inline-block;
+    padding-left: 100%;
+}
+
 
 .dafult_btn {
     height: 88rpx;

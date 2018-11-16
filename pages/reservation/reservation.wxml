@@ -1,4 +1,4 @@
-<view>
+<view wx:if="{{requestStatus}}">
     <view class='reservation_content'>
         <view class='service_box'>
             <view class='service_title'>服务技能</view>
@@ -17,7 +17,8 @@
                 <view wx:for="{{details.times}}" wx:key="" class='time_item {{timeId == index ? "active" : ""}}' catchtap='reservationEvent' data-types='time' data-index='{{index}}'>{{item}}小时</view>
             </view>
             <view class='total_money'>支付总额：{{totalMoney}}元</view>
-            <form report-submit='true' bindsubmit="reservationEvent" data-types='sure'>
+            <button wx:if="{{authALter}}" open-type='getUserInfo' class='call_partner_btn' bindgetuserinfo="userInfoHandler" hover-class='none'>呼叫萌伴</button>
+            <form wx:else report-submit='true' bindsubmit="reservationEvent" data-types='sure'>
                 <button form-type='submit' class='call_partner_btn'>呼叫萌伴</button>
             </form>
         </view>
@@ -27,7 +28,7 @@
             <view class='flex_start flex_items'>
                 <view class='dot'></view>
                 <view class='label' style='letter-spacing: 13rpx;'>萌伴号</view>
-                <view>MW10000001</view>
+                <view>{{details.card}}</view>
             </view>
             <view class='flex_start flex_items'>
                 <view class='dot'></view>
@@ -41,3 +42,18 @@
         </view>
     </view>
 </view>
+
+<!-- <block wx:if="{{authALter}}">
+    <view class='tankuang'></view>
+    <view class='alter2' style='padding-bottom:0'>
+        <view class='p30 box_b'>
+            <view class='f36 pb30'>微信授权</view>
+            <view class='ptb30 f30 bbe9s'>申请获取以下权限</view>
+            <view class='txt_center ptb30 f30 c9'>获得你的公开信息（昵称、头像等），是否允许？</view>
+            <view class='flex_end f30 txt_center pt30 flex_items'>
+                <view bindtap='closeAuth' class='auth c9 flex_shrink'>取消</view>
+                <button hover-class='none' class='cff5 auth f30' open-type="getUserInfo" bindgetuserinfo="userInfoHandler">确认</button>
+            </view>
+        </view>
+    </view>
+</block> -->

@@ -115,6 +115,7 @@
 }
 
 .wrapper {
+    display: block;
     width: 200rpx;
     height: 400rpx;
     position: absolute;
@@ -145,20 +146,12 @@
     border-top: 8rpx solid rgba(255, 134, 181, 0.2);
     border-right: 8rpx solid rgba(255, 134, 181, 0.2);    
     right: 0;
-    /* animation: circle_right 120s linear infinite;
-    -webkit-animation: circle_right 120s linear infinite;
-    animation-iteration-count: 1;
-    -webkit-animation-iteration-count: 1; */
 }
 
 .leftcircle {
     border-bottom: 8rpx solid rgba(255, 134, 181, 0.2);
     border-left: 8rpx solid rgba(255, 134, 181, 0.2);
     left: 0;
-    /* animation: circle_left 120s linear infinite;
-    -webkit-animation: circle_left 120s linear infinite;
-    animation-iteration-count: 1;
-    -webkit-animation-iteration-count: 1; */
 }
 
 @keyframes circle_right {

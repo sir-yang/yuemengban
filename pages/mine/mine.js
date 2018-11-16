@@ -28,15 +28,7 @@ Page({
             title: '加载中...',
             mask: true
         });
-        let token = common.getAccessToken();
-        if (token) {
-            that.getInfo();
-        } else {
-            getApp().globalData.tokenUpdated = function () {
-                console.log('update success');
-                that.getInfo();
-            }
-        }
+        that.getInfo();
     },
 
     /**

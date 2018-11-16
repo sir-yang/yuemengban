@@ -8,6 +8,8 @@ Page({
      * 页面的初始数据
      */
     data: {
+        requestStatus: false,
+        authALter: false,
         serverId: 0,
         timeId: 1,
         totalMoney: 0,
@@ -24,24 +26,46 @@ Page({
     onLoad(options) {
         this.state.options = options;
         let that = this;
-        let token = common.getAccessToken();
-        if (token) {
+        wx.showLoading({
+            title: '加载中...',
+            mask: true
+        });
+
+        if (getCurrentPages().length > 1) {
             common.getServiceInfo().then((data) => {
                 that.setData({
                     customer: data
                 });
             })
-            that.partnerDetail();
+            common.getPersonInfo().then((info) => {//获取用户信息
+                common.authInfo(that, (status) => {//验证授权
+                    that.partnerDetail();
+                });
+            });
         } else {
-            getApp().globalData.tokenUpdated = function () {
-                console.log('update success');
+            common.getToken().then((_res) => {//获取token
                 common.getServiceInfo().then((data) => {
                     that.setData({
                         customer: data
                     });
                 })
-                that.partnerDetail();
-            }
+                common.getPersonInfo().then((info) => {//获取用户信息
+                    common.authInfo(that, (status) => {//验证授权
+                        that.partnerDetail();
+                    });
+                });
+            });
+        }
+    },
+
+    /**
+     * 用户点击右上角分享
+     */
+    onShareAppMessage() {
+        let that = this;
+        return {
+            title: '一个最真实的萌妹在线游戏陪玩服务平台',
+            path: '/pages/reservation/reservation?id=' + that.state.options.id
         }
     },
 
@@ -77,6 +101,18 @@ Page({
         }
     },
 
+    // 获取用户信息 回调
+    userInfoHandler(event) {
+        common.userInfoBind(this, event);
+    },
+
+    //关闭授权弹框
+    // closeAuth() {
+    //     this.setData({
+    //         authALter: false
+    //     });
+    // },
+
     // 萌伴详情
     partnerDetail() {
         let that = this;
@@ -92,6 +128,7 @@ Page({
                 let timeId = that.data.timeId;
                 let totalMoney = details.times[timeId] * details.trick[serverId].money;
                 that.setData({
+                    requestStatus: true,
                     details,
                     totalMoney
                 });
@@ -114,6 +151,16 @@ Page({
             trickId: details.trick[serverId].id,
             times: timeId
         }
+
+        // 授权判断
+        let pay = true;
+        common.authInfo(that, (status) => {
+            if (!status) {
+                pay = false;
+            }
+        });
+        if (!pay) return;
+
         wx.showLoading({
             title: '提交中...',
             mask: true
@@ -121,19 +168,8 @@ Page({
         util.httpRequest(url, data, 'POST').then((res) => {
             wx.hideLoading();
             if (res.result == 'success') {
-                wx.showModal({
-                    title: '提示',
-                    content: '下单成功',
-                    showCancel: false,
-                    confirmColor: '#FEA2C5',
-                    success() {
-                        wx.redirectTo({
-                            url: '/pages/order/order'
-                        });
-                    }
-                });
-
-                // that.requestPay(res.results);
+                // 调用支付
+                that.requestPay(res.results);
             } else {
                 common.showClickModal(res.msg);
             }
@@ -151,11 +187,11 @@ Page({
             success(res) {
                 wx.showModal({
                     title: '提示',
-                    content: '下单成功',
+                    content: '下单成功，请添加萌萌客服微信',
                     showCancel: false,
                     confirmColor: '#FEA2C5',
                     success() {
-                        wx.redirectTo({
+                        wx.navigateTo({
                             url: '/pages/order/order'
                         });
                     }

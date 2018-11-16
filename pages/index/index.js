@@ -10,6 +10,7 @@ Page({
      * 页面的初始数据
      */
     data: {
+        requestStatus: false,
         current: 0,
         audioTime: '00:00',
         voice: '',
@@ -19,7 +20,6 @@ Page({
 
     state: {
         pageOnShow: false,
-        isOnReachBottom: false,
         isonPullDownRefresh: true,
         timing: false,
         times: ''
@@ -34,17 +34,14 @@ Page({
             mask: true
         });
         let that = this;
-        setTimeout(function() {
-            let token = common.getAccessToken();
-            if (token) {
-                that.getPartnerList();
-            } else {
-                getApp().globalData.tokenUpdated = function () {
-                    console.log('update success');
+        that.state.options = options;
+        common.getToken().then((_res) => {//获取token
+            common.getPersonInfo().then((info) => {//获取用户信息
+                common.authInfo(that, (status) => {//验证授权
                     that.getPartnerList();
-                }
-            }
-        },1000);
+                });
+            });
+        });
     },
 
     /**
@@ -89,8 +86,10 @@ Page({
      * 生命周期函数--监听页面显示
      */
     onShow() {
-        if (!this.state.pageOnShow) return;
-        this.getPartnerList();
+        let that = this;
+        if (!that.state.pageOnShow) return;
+        //获取用户信息
+        common.getPersonInfo().then((info) => {});
     },
 
     onHide() {
@@ -102,7 +101,6 @@ Page({
      * 页面相关事件处理函数--监听用户下拉动作
      */
     onPullDownRefresh() {
-        this.state.isonPullDownRefresh = true;
         wx.showLoading({
             title: '加载中...',
             mask: true
@@ -114,9 +112,15 @@ Page({
      * 用户点击右上角分享
      */
     onShareAppMessage() {
+        let list = this.data.list;
+        let current = this.data.current;
+        let path = '/pages/index/index';
+        if (list.length > 0) {
+            path += '?uid=' + list[current].id;
+        }
         return {
-            title: '一个最真实的萌妹在线游戏陪玩服务平台',
-            path: '/pages/index/index'
+            title: '一个最真实的萌伴在线游戏陪玩服务平台',
+            path: path
         }
     },
 
@@ -143,6 +147,12 @@ Page({
             } else {
                 current = Number(current) - 1;
             }
+
+            if (this.state.timing) {
+                clearTimeout(this.state.times);
+                innerAudioContext.stop();
+            }
+
             this.setData({
                 current,
                 audioTime: this.downTime(list[current].audio_times)
@@ -154,6 +164,11 @@ Page({
                 current = Number(current) + 1;
             }
 
+            if (this.state.timing) {
+                clearTimeout(this.state.times);
+                innerAudioContext.stop();
+            }
+
             this.setData({
                 current,
                 audioTime: this.downTime(list[current].audio_times)
@@ -162,41 +177,22 @@ Page({
             let current = this.data.current;
             let myInfo = common.getStorage('userInfo');
             if (list[current].id == myInfo.id) {
-                common.showClickModal('无法向自己下单哟');
+                common.showClickModal('不支持向自己下单');
                 return;
             }
-            // 授权判断
-            common.authInfo(this, (status) => {
-                if (status) {
-                    wx.navigateTo({
-                        url: '/pages/reservation/reservation?id=' + list[current].id
-                    });
-                }
+            wx.navigateTo({
+                url: '/pages/reservation/reservation?id=' + list[current].id
             });
         } else if (dataset.types == 'mine') { //我的
-            common.authInfo(this, (status) => {
-                if (status) {
-                    wx.navigateTo({
-                        url: '/pages/mine/mine'
-                    });
-                }
+            wx.navigateTo({
+                url: '/pages/mine/mine'
             });
         }
     },
 
     // 获取用户信息 回调
     userInfoHandler(event) {
-        this.setData({
-            authALter: false
-        });
         common.userInfoBind(this, event);
-    },
-
-    //关闭授权弹框
-    closeAuth() {
-        this.setData({
-            authALter: false
-        });
     },
 
     // 倒计时
@@ -237,20 +233,39 @@ Page({
         let that = this;
         let userInfo = common.getStorage('userInfo');
         let url = 'api/partner/getPage';
-        if (userInfo.type == 3) {
-            url += '?uid=' + userInfo.id
+        let opt = that.state.options;
+
+        // 判断是否携带uid
+        if (opt.hasOwnProperty('uid') || userInfo.type == 3) {
+            let uid = userInfo.id;
+            if (opt.hasOwnProperty('uid')) {//通过分享进入，优先使用分享id
+                uid = opt.uid;
+            }
+            url += '?uid=' + uid;
         }
         util.httpRequest(url).then((res) => {
+            that.state.pageOnShow = true;
+            wx.stopPullDownRefresh();
             wx.hideLoading();
             if (res.result == 'success') {
                 let list = res.results;
-                if (userInfo.type == 3) {
+                if (res.data) {
                     list.unshift(res.data);
                 }
-                that.setData({
-                    list,
-                    audioTime: that.downTime(list[0].audio_times)
-                })
+                if (list.length > 0) {
+                    that.setData({
+                        requestStatus: true,
+                        list,
+                        current: 0,
+                        audioTime: that.downTime(list[0].audio_times)
+                    });
+                } else {
+                    that.setData({
+                        requestStatus: true,
+                        list,
+                        current: 0
+                    });
+                }
             } else {
                 common.showClickModal(res.msg);
             }

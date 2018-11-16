@@ -116,9 +116,10 @@ function setToken(token) {
     setInfo('token', token.token);
     setInfo('refresh_token', token.fresh_token);
     //提前一半的时间就要刷新
-    let now = Date.parse(new Date());
-    let expireIn = (token.token_expire * 1000) / 2;
-    setInfo('expire_at', now + expireIn);
+    // let now = Date.parse(new Date());
+    let expireIn = token.token_expire * 1000;
+    // let expireIn = (token.token_expire * 1000 - (24 * 60 * 60 * 1000 / 2));
+    setInfo('expire_at', expireIn);
 }
 /**
  * 获取token
@@ -270,7 +271,10 @@ function userInfoBind(that, event) {
             console.log(JSON.stringify(res));
             wx.hideLoading();
             if (res.result == 'success') {
-                showClickModal('绑定成功');
+                that.setData({
+                    authALter: false
+                });
+                // showClickModal('绑定成功');
                 //重新获取信息
                 getPersonInfo().then(() => {});
             } else {
@@ -296,7 +300,7 @@ function getServiceInfo() {
 function authInfo(that, func) {
     let myInfo = getInfo('userInfo');
     if (myInfo.hasOwnProperty("id")) {
-        if (!myInfo.face && !myInfo.nickName && Number(getInfo("authALter")) === 0) {
+        if (!myInfo.face && !myInfo.nickName) {
             that.setData({
                 authALter: true
             });

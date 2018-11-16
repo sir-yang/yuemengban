@@ -31,14 +31,12 @@ Page({
             mask: true
         });
         let that = this;
-        let token = common.getAccessToken();
-        if (token) {
+        if (getCurrentPages().length > 1) {
             that.getOrderList(0);
         } else {
-            getApp().globalData.tokenUpdated = function () {
-                console.log('update success');
+            common.getToken().then((_res) => {//获取token
                 that.getOrderList(0);
-            }
+            });
         }
     },
 
@@ -74,12 +72,13 @@ Page({
     // 事件处理
     orderEvent(event) {
         let dataset = event.currentTarget.dataset;
+        let formId = event.detail.formId;
         let list = this.data.list;
         let index = dataset.index;
         if (dataset.types == 'receive') {
-            this.receiveOrder(index);
+            this.receiveOrder(index, formId);
         } else if (dataset.types == 'finish') {
-            this.finishOrder(index);
+            this.finishOrder(index, formId);
         }
     },
 
@@ -128,7 +127,7 @@ Page({
     },
 
     // 接单
-    receiveOrder(index) {
+    receiveOrder(index, formId) {
         let that = this;
         let list = that.data.list;
         let url = 'api/order/receive';
@@ -136,7 +135,11 @@ Page({
             title: '处理中...',
             mask: true
         });
-        util.httpRequest(url, {id: list[index].id}).then((res) => {
+        let data = {
+            wx_form_id: formId,
+            id: list[index].id
+        }
+        util.httpRequest(url, data).then((res) => {
             wx.hideLoading();
             if (res.result == 'success') {
                 list[index].status = 2;
@@ -149,7 +152,7 @@ Page({
     },
 
     // 完成订单
-    finishOrder(index) {
+    finishOrder(index, formId) {
         let that = this;
         let list = that.data.list;
         let url = 'api/order/finish';
@@ -157,7 +160,11 @@ Page({
             title: '处理中...',
             mask: true
         });
-        util.httpRequest(url, { id: list[index].id }).then((res) => {
+        let data = {
+            wx_form_id: formId,
+            id: list[index].id
+        }
+        util.httpRequest(url, data).then((res) => {
             wx.hideLoading();
             if (res.result == 'success') {
                 list[index].status = 3;

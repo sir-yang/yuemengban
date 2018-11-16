@@ -5,7 +5,7 @@ let util = app.globalData.utilFun;
 const recorderManager = wx.getRecorderManager()
 
 const options = {
-    duration: 120000,
+    duration: 60000,
     sampleRate: 44100,
     numberOfChannels: 1,
     encodeBitRate: 192000,
@@ -24,7 +24,8 @@ Page({
         canIUse: wx.canIUse('button.open-type.openSetting'),
         status: 'start',
         voice: '',
-        playing: false
+        playing: false,
+        recordAuth: true//语音授权
     },
 
     state: {
@@ -36,47 +37,10 @@ Page({
      */
     onLoad(options) {
         let that = this;
-        let token = common.getAccessToken();
-        if (token) {
-            common.getServiceInfo().then((data) => {
-                that.setData({
-                    customer: data
-                });
-            })
-        } else {
-            getApp().globalData.tokenUpdated = function () {
-                console.log('update success');
-                common.getServiceInfo().then((data) => {
-                    that.setData({
-                        customer: data
-                    });
-                })
-            }
-        }
-
-        // 获取录音权限
-        wx.getSetting({
-            success(res) {
-                if (!res.authSetting['scope.record']) {
-                    wx.authorize({
-                        scope: 'scope.record',
-                        success() {
-                            that.setData({
-                                recordAuth: true
-                            });
-                        },
-                        fail() {
-                            that.setData({
-                                recordAuth: false
-                            });
-                        }
-                    });
-                } else {
-                    that.setData({
-                        recordAuth: true
-                    });
-                }
-            }
+        common.getServiceInfo().then((data) => {
+            that.setData({
+                customer: data
+            });
         })
     },
 
@@ -88,23 +52,26 @@ Page({
         // 监听录音
         recorderManager.onStart(() => {
             that.animation1 = wx.createAnimation({
-                duration: 60000
+                duration: 30000
             });
             that.animation1.rotate(225).step();
 
-            that.animation2 = wx.createAnimation({
-                duration: 60000,
-                delay: 60000
-            });
-            that.animation2.rotate(225).step();
-            // that.state.duration = 0;
-            // that.state.atime = setInterval(() => {
-            //     that.state.duration += 1;
-            // },1000);
+            that.state.times = setTimeout(()=>{
+                that.animation2 = wx.createAnimation({
+                    duration: 30000
+                });
+                that.animation2.rotate(225).step();
+                that.setData({
+                    animation2: that.animation2.export()
+                })
+            },30000);
 
             let voice = that.data.voice;
             let playing = that.data.playing;
             if (voice) { //重新录音
+                if (playing) {//若在播放，则停止播放
+                    innerAudioContext.stop();
+                }
                 voice = '';
                 playing = false;
             }
@@ -112,34 +79,29 @@ Page({
                 status: 'end',
                 voice,
                 playing,
-                animation1: that.animation1.export(),
-                animation2: that.animation2.export()
+                animation1: that.animation1.export()
             });
         })
         recorderManager.onStop((res) => {
             console.log('recorder stop', res)
-            that.animation1.rotate(45).step({ duration: 0 });
-            that.animation2.rotate(45).step({ duration: 0 });
-            // clearInterval(that.state.atime);
-            // let duration = that.state.duration;
-            // if (duration > 0) {
-            //     that.animation1.rotate(45 + (duration * 3)).step({ duration: 0 });
-            //     that.animation2.rotate(45).step({ duration: 0 });
-            // } else if (duration == 60) {
-            //     that.animation1.rotate(255).step({ duration: 0 });
-            //     that.animation2.rotate(45).step({ duration: 0 });
-            // } else if (duration <= 120 && duration > 60) {
-            //     that.animation1.rotate(255).step({ duration: 0 });
-            //     that.animation2.rotate(45 + ((duration-60)* 3)).step({ duration: 0 });
-            // }
-
             that.state.audio = res.tempFilePath;
-            that.setData({
-                status: 'start',
-                voice: res.tempFilePath,
-                animation1: that.animation1.export(),
-                animation2: that.animation2.export()
-            });
+            that.animation1.rotate(45).step({ duration: 0 });
+            clearTimeout(that.state.times);
+            if (that.animation2) {
+                that.animation2.rotate(45).step({ duration: 0 });
+                that.setData({
+                    status: 'start',
+                    voice: res.tempFilePath,
+                    animation1: that.animation1.export(),
+                    animation2: that.animation2.export()
+                });
+            } else {
+                that.setData({
+                    status: 'start',
+                    voice: res.tempFilePath,
+                    animation1: that.animation1.export()
+                });
+            }            
         })
         recorderManager.onFrameRecorded((res) => {
             const { frameBuffer } = res;
@@ -213,10 +175,35 @@ Page({
         } else if (dataset.types == 'play') { //播放 
             innerAudioContext.src = that.data.voice;
             innerAudioContext.play();
-        } else if (dataset.types == 'record') { //重新录音
+        } else if (dataset.types == 'record') { //开始/重新录音
             let status = that.data.status;
-            if (status == 'start') {
-                recorderManager.start(options);
+            if (status == 'start') {                
+                // 获取录音权限
+                wx.getSetting({
+                    success(res) {
+                        if (!res.authSetting['scope.record']) {
+                            wx.authorize({
+                                scope: 'scope.record',
+                                success() {
+                                    that.setData({
+                                        recordAuth: true
+                                    });
+                                    recorderManager.start(options);
+                                },
+                                fail() {
+                                    that.setData({
+                                        recordAuth: false
+                                    });
+                                }
+                            });
+                        } else {
+                            that.setData({
+                                recordAuth: true
+                            });
+                            recorderManager.start(options);
+                        }
+                    }
+                })
             } else {
                 recorderManager.stop();
             }
@@ -226,39 +213,19 @@ Page({
             if (that.state.audio) {
                 that.applyPartner(event.detail.formId);
             } else {
-                common.showClickModal('您还未录入介绍呢');
+                common.showClickModal('请先录制不超过1分钟的技能介绍');
             }
         } else if (dataset.types == 'image') { //查看大图
             wx.previewImage({
                 urls: [that.data.customer.o_bject_img]
             });
         } else if (dataset.types == 'auth') {//授权回调
-            if (event.detail.authSetting['scope.record']) {
-                that.setData({
-                    recordAuth: true
-                });
-            }
+            // if (event.detail.authSetting['scope.record']) {
+            //     that.setData({
+            //         recordAuth: true
+            //     });
+            // }
         }
-    },
-
-    // 录音动画
-    dotAnFun() {
-        let i = 1
-        let dotAnData = wx.createAnimation({
-            duration: 120000,
-            transformOrigin: '1px 100px'
-        })
-        let that = this;
-        that.state.dotAnFun = setInterval(function () {
-            if (i == 60) {
-                clearInterval(that.state.dotAnFun);
-            } else {
-                dotAnData.rotate(6 * (++i)).step();
-                that.setData({
-                    dotAnData: dotAnData.export()
-                });
-            }
-        }, 2000);
     },
 
     // 获取萌伴信息

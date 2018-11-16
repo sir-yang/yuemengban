@@ -14,18 +14,20 @@
                 <view wx:elif="{{item.status == 3}}" class='cont_top flex_center flex_items'>已完成</view>
                 <view wx:elif="{{item.status == 4 || item.status == 5}}" class='cont_top flex_center flex_items'>订单取消</view>
                 <view class='cont_row'>
-                    <view>订单编号：{{item.orderNo}}</view>
-                    <view>萌伴号：{{item.cuteNo}}</view>
-                    <view>技能服务：{{item.service}}</view>
-                    <view>时长：{{item.times}}小时</view>
-                    <view>支付总额：{{item.money}}元</view>
-                    <view>下单时间：{{item.addTime}}</view>
+                    <view><text>订单编号</text>：{{item.orderNo}}</view>
+                    <view><text>萌伴号</text>：{{item.cuteNo}}</view>
+                    <view><text>技能服务</text>：{{item.service}}</view>
+                    <view><text>时长</text>：{{item.times}}小时</view>
+                    <view><text>支付总额</text>：{{item.money}}元</view>
+                    <view><text>下单时间</text>：{{item.addTime}}</view>
                 </view>
             </view>
             <!-- 萌伴 -->
             <block wx:if="{{item.edit == 1}}">
-                <view wx:if="{{item.status == 1}}" class='order_btn dafult_btn' catchtap='orderEvent' data-types='receive' data-index='{{index}}'>接单</view>
-                <view wx:elif="{{item.status == 2}}" class='order_btn dafult_btn' catchtap='orderEvent' data-types='finish' data-index='{{index}}'>完成</view>
+                <form report-submit='true' bindsubmit="orderEvent" data-types='{{item.status == 1 ? "receive" : "finish"}}' data-index='{{index}}'>
+                    <button wx:if="{{item.status == 1}}" form-type='submit' class='order_btn dafult_btn'>接单</button>
+                    <button wx:elif="{{item.status == 2}}" form-type='submit' class='order_btn dafult_btn'>完成</button>
+                </form>
             </block>
             <!-- 用户 -->
             <view wx:if="{{item.edit == 0 && item.status == 1}}" class='time_btn dafult_btn'>剩余  {{item.minute}}:{{item.second}}</view>

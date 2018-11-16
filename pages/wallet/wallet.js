@@ -19,25 +19,8 @@ Page({
             title: '加载中...',
             mask: true
         });
-        let that = this;
-        let token = common.getAccessToken();
-        if (token) {
-            that.getAccountInfo();
-        } else {
-            getApp().globalData.tokenUpdated = function () {
-                console.log('update success');
-                that.getAccountInfo();
-            }
-        }
+        this.getAccountInfo();
     },
-
-    /**
-     * 生命周期函数--监听页面显示
-     */
-    onShow() {
-
-    },
-
 
     // 提现操作
     wattleEvent:function(event) {

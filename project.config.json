@@ -12,7 +12,7 @@
 	},
 	"compileType": "miniprogram",
 	"libVersion": "2.3.0",
-	"appid": "wx4809eadc78a65e59",
+	"appid": "wxdf0abf0b7951aa91",
 	"projectname": "yuemengban",
 	"debugOptions": {
 		"hidedInDevtools": []
@@ -41,8 +41,8 @@
 				{
 					"id": 0,
 					"name": "aa",
-					"pathName": "pages/mine/mine",
-					"query": ""
+					"pathName": "pages/index/index",
+					"query": "uid=4"
 				},
 				{
 					"id": -1,

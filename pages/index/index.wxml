@@ -1,5 +1,5 @@
 
-<view>
+<view wx:if="{{requestStatus}}">
     <view class='partner_info'>
         <view class='partner_pic_box'>
             <swiper wx:if="{{list[current].Img}}" class='partner_pic' autoplay="true" circular="true" interval="3000" duration="500">
@@ -12,7 +12,7 @@
             <image wx:else class='partner_pic' src='/images/default.png'></image>
             <view class='partner_name_status flex_between flex_items'>
                 <view class='pos'>昵称<text class='ml10'>{{list[current].nickName}}</text></view>
-                <view class='pos'>{{list[current].status == 1 ? "在线" : "忙碌"}}</view>
+                <view class='pos'>{{list[current].statusId == 1 && list[current].status == 1 ? "在线" : "忙碌"}}</view>
             </view>
         </view>
 
@@ -30,33 +30,21 @@
             <image src='/images/home-btn-icon.png'></image>
             <view>上一个</view>
         </view>
-        <view class='center_btn_box' catchtap='homeEvent' data-types='sure'>
+
+        <view class='center_btn_box' catchtap='{{authALter ? "" : "homeEvent"}}' data-types='sure'>
             <image class='yue_icon' src='/images/home-bottonyue.png'></image>
             <view>约</view>
+            <button wx:if="{{authALter}}" open-type="getUserInfo" class='center_btn_box_button' bindgetuserinfo="userInfoHandler" hover-class='none'></button>
         </view>
+
         <view class='next_prev_btn' catchtap='homeEvent' data-types='next'>
             <image src='/images/home-btn-icon.png'></image>
             <view>下一个</view>
         </view>
     </view>
 
-    <view>
+    <view class='personal_btn'>
         <image catchtap='homeEvent' data-types='mine' class='personal_btn' src='/images/home-bottonmine.png'></image>
+        <button wx:if="{{authALter}}" open-type="getUserInfo" class='center_btn_box_button' bindgetuserinfo="userInfoHandler" hover-class='none'></button>
     </view>
 </view>
-
-
-<block wx:if="{{authALter}}">
-    <view class='tankuang'></view>
-    <view class='alter2' style='padding-bottom:0'>
-        <view class='p30 box_b'>
-            <view class='f36 pb30'>微信授权</view>
-            <view class='ptb30 f30 bbe9s'>申请获取以下权限</view>
-            <view class='txt_center ptb30 f30 c9'>获得你的公开信息（昵称、头像等），是否允许？</view>
-            <view class='flex_end f30 txt_center pt30 flex_items'>
-                <view bindtap='closeAuth' class='auth c9 flex_shrink'>取消</view>
-                <button hover-class='none' class='cff5 auth f30' open-type="getUserInfo" bindgetuserinfo="userInfoHandler">确认</button>
-            </view>
-        </view>
-    </view>
-</block>
