@@ -2,7 +2,7 @@
 <view wx:if="{{requestStatus}}">
     <view class='partner_info'>
         <view class='partner_pic_box'>
-            <swiper wx:if="{{list[current].Img}}" class='partner_pic' autoplay="true" circular="true" interval="3000" duration="500">
+            <swiper wx:if="{{list[current].Img}}" class='partner_pic' current="{{swiperCurrent}}" autoplay="true" circular="true" interval="3000" duration="500">
                 <block wx:for="{{list[current].Img}}" wx:key="">
                     <swiper-item>
                         <image src="{{item}}" class="partner_pic"></image>

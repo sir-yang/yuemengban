@@ -15,7 +15,8 @@ Page({
         audioTime: '00:00',
         voice: '',
         authALter: false,
-        list: []
+        list: [],
+        swiperCurrent: 0
     },
 
     state: {
@@ -154,6 +155,7 @@ Page({
             }
 
             this.setData({
+                swiperCurrent: 0,
                 current,
                 audioTime: this.downTime(list[current].audio_times)
             });
@@ -170,6 +172,7 @@ Page({
             }
 
             this.setData({
+                swiperCurrent: 0,
                 current,
                 audioTime: this.downTime(list[current].audio_times)
             });
